@@ -3,26 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Gallery</title>
+    <title>Atharva | Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom scrollbar for a cleaner look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #fafaf9; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #d6d3d1; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a29e; 
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fafaf9; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
         
-        /* Smooth fade in for images */
         .fade-in {
             animation: fadeIn 0.8s ease-in-out forwards;
             opacity: 0;
@@ -33,9 +22,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Hide scrollbar for lightbox but keep functionality */
-        .no-scroll {
-            overflow: hidden;
+        .no-scroll { overflow: hidden; }
+
+        /* Style for plain text links to keep them subtle but clear */
+        .content-link {
+            text-decoration: underline;
+            text-decoration-color: #d6d3d1;
+            text-underline-offset: 4px;
+            color: #1c1917;
+            transition: all 0.2s;
+        }
+        .content-link:hover {
+            text-decoration-color: #1c1917;
+            background-color: #f5f5f4;
         }
     </style>
     <script>
@@ -58,12 +57,10 @@
             }
         }
     </script>
-    <!-- Importing Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-stone-200 selection:text-stone-900">
 
-    <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-stone-50/90 backdrop-blur-sm z-40 border-b border-stone-100 transition-all duration-300" id="navbar">
         <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="#" class="text-xl font-serif tracking-tight font-medium hover:text-stone-600 transition-colors">
@@ -71,235 +68,85 @@
             </a>
             
             <div class="hidden md:flex space-x-8 text-sm font-light tracking-wide text-stone-500">
+                <a href="#" class="text-stone-900 border-b border-stone-900">Home</a>
                 <a href="books.html" class="hover:text-stone-900 transition-colors">Books</a>
                 <a href="#work" class="hover:text-stone-900 transition-colors">Work</a>
-                <a href="#gallery" class="text-stone-900">Gallery</a>
+                <a href="gallery.html" class="hover:text-stone-900 transition-colors">Gallery</a>
                 <a href="#about" class="hover:text-stone-900 transition-colors">About</a>
                 <a href="#contact" class="hover:text-stone-900 transition-colors">Contact</a>
             </div>
 
-            <!-- Mobile Menu Button -->
             <button class="md:hidden text-stone-800" onclick="toggleMobileMenu()">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </div>
     </nav>
 
-    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-stone-50 z-30 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col items-center justify-center space-y-8 text-xl font-serif">
         <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 p-2">
             <i data-lucide="x" class="w-8 h-8 text-stone-800"></i>
         </button>
+        <a href="#" onclick="toggleMobileMenu()">Home</a>
         <a href="books.html" onclick="toggleMobileMenu()">Books</a>
         <a href="#work" onclick="toggleMobileMenu()">Work</a>
-        <a href="#gallery" onclick="toggleMobileMenu()">Gallery</a>
+        <a href="gallery.html" onclick="toggleMobileMenu()">Gallery</a>
         <a href="#about" onclick="toggleMobileMenu()">About</a>
         <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
     </div>
 
-    <!-- Main Content -->
-    <main class="pt-32 pb-20 px-6 max-w-6xl mx-auto">
+    <main class="pt-32 pb-20 px-6 max-w-3xl mx-auto">
         
-        <!-- Header Section -->
-        <header class="mb-24 md:mb-32 max-w-2xl fade-in" style="animation-delay: 0.1s;">
-            <p class="text-stone-400 text-sm tracking-widest uppercase mb-4">Photography Portfolio</p>
-            <h1 class="text-4xl md:text-6xl font-serif font-normal leading-tight mb-6">
-                Capturing moments in <br>
-                <span class="italic text-stone-500">stillness</span> and light.
-            </h1>
-            <p class="text-stone-600 font-light leading-relaxed max-w-md">
-                A curated collection of visual stories. Exploring the beauty found in everyday geometry and the quiet atmosphere of the natural world.
-            </p>
-        </header>
-
-        <!-- Gallery Section -->
-        <section id="gallery" class="mb-24">
-            <!-- Masonry Grid Layout -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
-                
-                <!-- Image 1 -->
-                <div class="group relative cursor-pointer fade-in" style="animation-delay: 0.3s;" onclick="openLightbox(this)">
-                    <div class="overflow-hidden rounded-sm bg-stone-200 aspect-[4/3] md:aspect-[3/4]">
-                        <img 
-                            src="https://lh3.googleusercontent.com/pw/AP1GczMTv62fFaoEaOKruUvjYrzHh1E5QwgMdjWHsIsdPQJev7DSA68VHOMALfhv9hoiEkLjTJCe7vFUnNLTk6LyjlIwNxhUFJYJ0QO-RHNP8f6pL7wWhyBb=w2400" 
-                            alt="Atmospheric Landscape" 
-                            class="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105 opacity-95 group-hover:opacity-100"
-                        >
-                    </div>
-                    <div class="mt-4 flex justify-between items-baseline opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div>
-                            <h3 class="font-medium text-stone-900">Ethereal Blue</h3>
-                            <p class="text-xs text-stone-400 mt-1">Fujifilm X-T4 • 35mm</p>
-                        </div>
-                        <span class="text-xs text-stone-400 border border-stone-200 px-2 py-1 rounded-full">2024</span>
-                    </div>
-                </div>
-
-                <!-- Image 2 (Offset on desktop for aesthetic) -->
-                <div class="group relative cursor-pointer md:mt-24 fade-in" style="animation-delay: 0.5s;" onclick="openLightbox(this)">
-                    <div class="overflow-hidden rounded-sm bg-stone-200 aspect-[4/3] md:aspect-[3/4]">
-                        <img 
-                            src="https://lh3.googleusercontent.com/pw/AP1GczPp6ZXjSS03e0HIG6zmN0u6qOA4uUYp8831blmFTmQ7IWmnqEkrXMAt_y63w1suEJNCWTnhnp9reW9wwiLBqUBe8UcUWRp2BNVdXDqyb953K-sgRnqh=w2400" 
-                            alt="Urban Architecture" 
-                            class="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105 opacity-95 group-hover:opacity-100"
-                        >
-                    </div>
-                    <div class="mt-4 flex justify-between items-baseline opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div>
-                            <h3 class="font-medium text-stone-900">Quiet Structures</h3>
-                            <p class="text-xs text-stone-400 mt-1">Sony A7III • 50mm</p>
-                        </div>
-                        <span class="text-xs text-stone-400 border border-stone-200 px-2 py-1 rounded-full">2023</span>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- About / Contact Section -->
-        <section id="contact" class="border-t border-stone-200 pt-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 fade-in" style="animation-delay: 0.7s;">
-            <div>
-                <h2 class="font-serif text-2xl mb-2">Let's create together.</h2>
-                <p class="text-stone-500 font-light text-sm max-w-xs">
-                    Open for commissions and collaborations worldwide.
-                </p>
-            </div>
+        <div class="fade-in space-y-8 text-stone-600 font-light leading-relaxed text-lg whitespace-pre-line" style="animation-delay: 0.1s;">
+            Hi Dear Reader! 
             
+            Thank you for landing on this page. I am Atharv Dabli, and I (as of April 2026) work as a Research Assistant at ICTD lab, IIT Delhi.
+
+            Currently, I work with professor <a href="https://homecse.iitd.ac.in/team/aaditeshwar-seth/" class="content-link" target="_blank">Aaditeshwar Seth</a> on building a Knowledge Graph based retrieval system for local climate and land-atmosphere interaction understanding. The idea is to make a structured knowledge base which captures various climate variables (e.g. soil_moisture, latent_heat_flux, planetary_boundary_layer, land_use etc.) and the relationships between them (how they influence one another), under different climate regimes or contexts. This graph can then be reasoned and queried through by algorithms and using LLMs to generate evidence-based answers for various user queries (e.g. : Would afforestation improve precipitation in a given region?). We are using the large climate science literature, which can be roughly regarded as an unstructured knowledge source. The work here would help in answering various queries including land use suggestions for a climate resilient future. Hopefully, this would be useful for planning and also creating a framework for other similar studies.
+
+            Starting this fall (Sept. 2026), I'd be joining <a href="https://ethz.ch/en.html" class="content-link" target="_blank">ETH Zurich</a>, where I’d be majoring in atmosphere and climate sciences. (MSc Environmental Science, major in Atmosphere and Climate) and I plan to take a deep dive into paleo-climatology, climate processes and feedback, modelling, high performance computing and some remote sensing (esp. radar remote sensing since it seems to be quite useful in various applications).
+
+            I graduated with a B.Tech. in Computer Science and Engineering at IIT Delhi, with a minor area in Atmospheric Sciences. I worked for a year as a Data Scientist at SkanAI in Bengaluru, before going back to my ‘academic home’ in Delhi.
+
+            Science TV Shows & Documentaries (Cosmos : A spacetime odyssey, Nova, How the universe works etc.), Nature Documentaries (Our Planet, My Octopus Teacher etc.) and History Shows (especially related to history of science, and wars) are something that I like to watch a lot, especially during my middle and high school years, and had a deep impact on me developing curiosity and questioning the ‘ways of the universe’, and reflecting upon life in general.
+
+            Since my undergrad years, philosophy as taught by GOAT <a href="https://acharyaprashant.org/" class="content-link" target="_blank">Acharya Prashant</a>, has had deep impact on me, and even though the impact of psychological and philosophical understanding is first intrinsic, I believe this has been well expressed in my life where I have learned to not conform to others, turned a vegan out of a will to not participate in cruelty towards animals and want to understand and work towards the problems like climate change affecting our home. 
+
+            Some of the movies or TV shows that have had an impact on me or I enjoyed are Into the Wild, Fight Club, Office Space, Schindler’s List, The Pianist, Rick and Morty. I like travelling, learning the piano, and have started training in Jiu Jitsu.
+        </div>
+
+        <section id="contact" class="border-t border-stone-200 mt-20 pt-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 fade-in" style="animation-delay: 0.3s;">
             <div class="flex gap-4">
-                <a href="#" class="p-3 rounded-full bg-stone-100 hover:bg-stone-200 transition-colors text-stone-600 hover:text-stone-900 group" title="Instagram">
-                    <i data-lucide="instagram" class="w-5 h-5"></i>
-                </a>
-                <a href="#" class="p-3 rounded-full bg-stone-100 hover:bg-stone-200 transition-colors text-stone-600 hover:text-stone-900 group" title="Twitter">
-                    <i data-lucide="twitter" class="w-5 h-5"></i>
-                </a>
-                <button onclick="copyEmail()" class="flex items-center gap-2 px-5 py-3 rounded-full bg-stone-900 text-stone-50 hover:bg-stone-800 transition-all shadow-lg shadow-stone-200 active:scale-95">
-                    <span id="email-text">hello@Atharvagallery.com</span>
+                <button onclick="copyEmail()" class="flex items-center gap-2 px-6 py-3 rounded-full bg-stone-900 text-stone-50 hover:bg-stone-800 transition-all active:scale-95 shadow-lg shadow-stone-200">
+                    <span id="email-text">atharva2309@gmail.com</span>
                     <i data-lucide="copy" class="w-4 h-4 ml-1"></i>
                 </button>
             </div>
         </section>
-        
-        <!-- <footer class="mt-20 text-center md:text-left text-xs text-stone-400 font-light">
-            &copy; 2025 Atharva Portfolio. All rights reserved.
-        </footer> -->
 
     </main>
 
-    <!-- Lightbox Modal -->
-    <div id="lightbox" class="fixed inset-0 z-50 bg-stone-950/95 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
-        <!-- Close Button -->
-        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/70 hover:text-white transition-colors p-2 z-10">
-            <i data-lucide="x" class="w-8 h-8"></i>
-        </button>
-
-        <!-- Image Container -->
-        <img id="lightbox-img" src="" alt="Full screen view" class="max-h-[90vh] max-w-[95vw] object-contain shadow-2xl rounded-sm transition-transform duration-300 scale-95">
-        
-        <!-- Caption -->
-        <div class="absolute bottom-6 left-0 right-0 text-center">
-            <p id="lightbox-caption" class="text-white/80 font-serif tracking-wide text-lg"></p>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-stone-900 text-white px-6 py-3 rounded-full text-sm font-light shadow-xl translate-y-20 opacity-0 transition-all duration-300 z-50">
         Email copied to clipboard
     </div>
 
     <script>
-        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // Mobile Menu Logic
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
-            const isOpen = !menu.classList.contains('translate-x-full');
-            
-            if (isOpen) {
-                menu.classList.add('translate-x-full');
-                document.body.classList.remove('no-scroll');
-            } else {
-                menu.classList.remove('translate-x-full');
-                document.body.classList.add('no-scroll');
-            }
+            menu.classList.toggle('translate-x-full');
+            document.body.classList.toggle('no-scroll');
         }
 
-        // Lightbox Logic
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxCaption = document.getElementById('lightbox-caption');
-
-        function openLightbox(element) {
-            const img = element.querySelector('img');
-            const title = element.querySelector('h3').innerText;
-            
-            lightboxImg.src = img.src;
-            lightboxCaption.innerText = title;
-            
-            lightbox.classList.remove('hidden');
-            document.body.classList.add('no-scroll');
-            
-            // Small delay to allow display:block to apply before changing opacity for transition
-            requestAnimationFrame(() => {
-                lightbox.classList.remove('opacity-0');
-                lightboxImg.classList.remove('scale-95');
-                lightboxImg.classList.add('scale-100');
-            });
-        }
-
-        function closeLightbox() {
-            lightbox.classList.add('opacity-0');
-            lightboxImg.classList.remove('scale-100');
-            lightboxImg.classList.add('scale-95');
-            
-            document.body.classList.remove('no-scroll');
-
-            setTimeout(() => {
-                lightbox.classList.add('hidden');
-                lightboxImg.src = ''; 
-            }, 300);
-        }
-
-        // Close lightbox on clicking background
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-                closeLightbox();
-            }
-        });
-
-        // Copy to Clipboard Logic
         function copyEmail() {
             const email = "hello@Atharvagallery.com";
-            
-            // Modern clipboard API
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(email).then(showToast);
-            } else {
-                // Fallback
-                const textArea = document.createElement("textarea");
-                textArea.value = email;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand("copy");
-                document.body.removeChild(textArea);
-                showToast();
-            }
-        }
-
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2500);
+            navigator.clipboard.writeText(email).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 2500);
+            });
         }
     </script>
 </body>
