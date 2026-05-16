@@ -249,9 +249,9 @@
                 <div id="tree" class="tree-panel mx-auto text-sm"></div>
                 <label for="delay-slider" class="flex items-center justify-between gap-3 text-sm text-stone-600 mt-4 mb-2 max-w-[38rem] mx-auto">
                     Animation delay
-                    <span id="delay-value" class="font-medium text-stone-900">240 ms</span>
+                    <span id="delay-value" class="font-medium text-stone-900">30 ms</span>
                 </label>
-                <input id="delay-slider" class="block w-full max-w-[38rem] mx-auto accent-stone-900" type="range" min="60" max="700" step="20" value="240">
+                <input id="delay-slider" class="block w-full max-w-[38rem] mx-auto accent-stone-900" type="range" min="1" max="500" step="1" value="30">
             </div>
         </div>
 
@@ -305,7 +305,7 @@
     let aiMode = true;
     let isThinking = false;
     let searchToken = 0;
-    let searchDelay = 240;
+    let searchDelay = 30;
     let scores = { human: 0, ai: 0 };
 
     const boardEl = document.getElementById('board');
