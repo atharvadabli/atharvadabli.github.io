@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Four | Atharva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: { 50:'#fafaf9',100:'#f5f5f4',200:'#e7e5e4',300:'#d6d3d1',500:'#78716c',600:'#57534e',800:'#292524',900:'#1c1917' }
+                    },
+                    fontFamily: { sans:['Inter','sans-serif'], serif:['Playfair Display','serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fafaf9; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: clamp(0.35rem, 1.6vw, 0.75rem);
+            width: min(100%, 38rem);
+            aspect-ratio: 7 / 6;
+            padding: clamp(0.5rem, 2vw, 0.9rem);
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: inset 0 -0.5rem 0 rgba(0, 0, 0, 0.14), 0 1.2rem 2rem rgba(41, 37, 36, 0.12);
+        }
+
+        .cell {
+            border-radius: 999px;
+            background: #fafaf9;
+            border: 2px solid rgba(28, 25, 23, 0.12);
+            box-shadow: inset 0 0.35rem 0.65rem rgba(28, 25, 23, 0.18);
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+
+        .cell.player-one {
+            background: radial-gradient(circle at 34% 28%, #fee2e2 0 12%, #ef4444 13% 58%, #b91c1c 100%);
+        }
+
+        .cell.player-two {
+            background: radial-gradient(circle at 34% 28%, #fef9c3 0 12%, #facc15 13% 58%, #ca8a04 100%);
+        }
+
+        .cell.winning {
+            box-shadow: inset 0 0.35rem 0.65rem rgba(28, 25, 23, 0.14), 0 0 0 4px rgba(255, 255, 255, 0.72);
+            transform: scale(1.04);
+        }
+
+        .column-button {
+            min-height: 2.75rem;
+            border-radius: 999px;
+        }
+
+        .tree-panel {
+            width: min(100%, 38rem);
+            aspect-ratio: 7 / 6;
+            max-height: none;
+            overflow: auto;
+            border: 1px solid #e7e5e4;
+            border-radius: 8px;
+            background:
+                linear-gradient(#fafaf9 1px, transparent 1px),
+                linear-gradient(90deg, #fafaf9 1px, transparent 1px),
+                #ffffff;
+            background-size: 24px 24px;
+        }
+
+        .tree-canvas {
+            position: relative;
+            min-width: 46rem;
+            min-height: 100%;
+        }
+
+        .tree-edges {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .tree-edge {
+            stroke: #d6d3d1;
+            stroke-width: 2;
+            fill: none;
+            opacity: 0;
+            transition: opacity 0.18s ease, stroke 0.18s ease;
+        }
+
+        .tree-edge.visible {
+            opacity: 1;
+        }
+
+        .tree-edge.best {
+            stroke: #16a34a;
+            stroke-width: 3;
+        }
+
+        .tree-visual-node {
+            position: absolute;
+            width: 4.7rem;
+            min-height: 3.35rem;
+            border: 1px solid #d6d3d1;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 0.5rem 1rem rgba(41, 37, 36, 0.08);
+            padding: 0.5rem;
+            text-align: center;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.88);
+            transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .tree-visual-node.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .tree-visual-node.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15), 0 0.5rem 1rem rgba(41, 37, 36, 0.08);
+        }
+
+        .tree-visual-node.best {
+            border-color: #16a34a;
+            background: #f0fdf4;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.16), 0 0.5rem 1rem rgba(41, 37, 36, 0.08);
+        }
+
+        .tree-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.35rem;
+            height: 1.35rem;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .tree-chip.ai {
+            background: #ca8a04;
+        }
+
+        .tree-chip.human {
+            background: #dc2626;
+        }
+
+        .tree-chip.root {
+            background: #292524;
+        }
+
+        @media (max-width: 640px) {
+            .board,
+            .tree-panel {
+                width: calc(100vw - 3rem);
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-stone-200 selection:text-stone-900">
+
+<nav class="fixed top-0 w-full bg-stone-50/90 backdrop-blur-sm z-40 border-b border-stone-100">
+    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+        <a href="index.html" class="text-xl font-serif tracking-tight font-medium hover:text-stone-600 transition-colors">Atharva.</a>
+        <div class="hidden md:flex space-x-8 text-sm font-light tracking-wide text-stone-500">
+            <a href="index.html" class="hover:text-stone-900 transition-colors">Home</a>
+            <a href="books.html" class="hover:text-stone-900 transition-colors">Books</a>
+            <a href="index.html#work" class="text-stone-900 border-b border-stone-900">Work</a>
+            <a href="gallery.html" class="hover:text-stone-900 transition-colors">Gallery</a>
+            <a href="index.html#about" class="hover:text-stone-900 transition-colors">About</a>
+            <a href="index.html#contact" class="hover:text-stone-900 transition-colors">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <header class="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start mb-12 min-w-0">
+        <div class="min-w-0">
+            <p class="text-stone-400 text-sm tracking-widest uppercase mb-4">College AI Project</p>
+            <h1 class="text-4xl md:text-6xl font-serif leading-tight mb-6">Connect Four</h1>
+            <p class="text-stone-600 font-light leading-relaxed text-lg max-w-2xl">
+                This was built as an undergraduate AI assignment around expectimax, minimax-style search, heuristics, and PopOut rules. This page adds a static browser version so the project has a frontend home on the website.
+            </p>
+        </div>
+        <div class="space-y-4 min-w-0">
+            <div class="border border-stone-200 rounded-lg bg-white/70 p-5">
+                <div class="flex items-center gap-2 text-stone-900 mb-3">
+                    <i data-lucide="circle-help" class="w-4 h-4"></i>
+                    <h2 class="font-medium">How to play</h2>
+                </div>
+                <ul class="space-y-2 text-sm text-stone-600 font-light leading-relaxed">
+                    <li>Red moves first. Click a numbered column to drop a disc.</li>
+                    <li>The first player to connect four horizontally, vertically, or diagonally wins.</li>
+                    <li>If all columns fill before a four-in-a-row appears, the game is a draw.</li>
+                    <li>In Human vs AI, yellow searches the game tree before choosing its move.</li>
+                </ul>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm min-w-0">
+                <a href="projects/connect_four/Report.txt" class="flex items-center justify-center gap-2 border border-stone-200 rounded-lg px-4 py-3 hover:border-stone-400 hover:bg-white transition-colors">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    Report
+                </a>
+                <a href="projects/connect_four/ai.py" class="flex items-center justify-center gap-2 border border-stone-200 rounded-lg px-4 py-3 hover:border-stone-400 hover:bg-white transition-colors">
+                    <i data-lucide="code-2" class="w-4 h-4"></i>
+                    AI code
+                </a>
+                <a href="projects/connect_four/starter_code/README.md" class="flex items-center justify-center gap-2 border border-stone-200 rounded-lg px-4 py-3 hover:border-stone-400 hover:bg-white transition-colors">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    README
+                </a>
+                <a href="projects/connect_four/starter_code.zip" class="flex items-center justify-center gap-2 border border-stone-200 rounded-lg px-4 py-3 hover:border-stone-400 hover:bg-white transition-colors">
+                    <i data-lucide="archive" class="w-4 h-4"></i>
+                    ZIP
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="space-y-8 min-w-0">
+        <div class="grid xl:grid-cols-2 gap-10 items-start min-w-0">
+            <div class="min-w-0">
+                <div class="grid grid-cols-7 gap-2 mb-4 max-w-[38rem] mx-auto" id="column-controls" aria-label="Choose a column"></div>
+                <div id="board" class="board mx-auto" aria-label="Connect Four board"></div>
+            </div>
+
+            <div id="search-card" class="min-w-0">
+                <div class="flex items-center justify-between gap-3 mb-4 min-h-[2.75rem] max-w-[38rem] mx-auto">
+                    <div>
+                        <p class="text-xs tracking-widest uppercase text-stone-400">Minimax tree</p>
+                        <p id="search-summary" class="text-sm text-stone-500 mt-1">Waiting for the AI turn.</p>
+                    </div>
+                    <i data-lucide="git-fork" class="w-4 h-4 text-stone-500"></i>
+                </div>
+                <div id="tree" class="tree-panel mx-auto text-sm"></div>
+                <label for="delay-slider" class="flex items-center justify-between gap-3 text-sm text-stone-600 mt-4 mb-2 max-w-[38rem] mx-auto">
+                    Animation delay
+                    <span id="delay-value" class="font-medium text-stone-900">240 ms</span>
+                </label>
+                <input id="delay-slider" class="block w-full max-w-[38rem] mx-auto accent-stone-900" type="range" min="60" max="700" step="20" value="240">
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 items-start">
+            <div class="border border-stone-200 rounded-lg bg-white/70 p-5">
+                <p class="text-xs tracking-widest uppercase text-stone-400 mb-2">Status</p>
+                <h2 id="status" class="text-2xl font-serif text-stone-900 leading-tight">Your move</h2>
+                <p id="score" class="mt-4 text-sm text-stone-500">Human 0 - AI 0</p>
+            </div>
+
+            <div class="border border-stone-200 rounded-lg bg-white/70 p-5">
+                <p class="text-xs tracking-widest uppercase text-stone-400 mb-3">Mode</p>
+                <div class="flex gap-2">
+                    <button id="human-mode" class="mode-button flex-1 px-3 py-2 rounded-lg bg-stone-900 text-stone-50 text-sm" type="button">Human vs AI</button>
+                    <button id="local-mode" class="mode-button flex-1 px-3 py-2 rounded-lg border border-stone-200 text-sm" type="button">Two players</button>
+                </div>
+            </div>
+
+            <div class="border border-stone-200 rounded-lg bg-white/70 p-5">
+                <p class="text-xs tracking-widest uppercase text-stone-400 mb-3">Controls</p>
+                <button id="reset" class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-stone-900 text-stone-50 px-4 py-3 hover:bg-stone-800 transition-colors" type="button">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    New game
+                </button>
+                <p class="text-sm text-stone-500 font-light leading-relaxed mt-4">
+                    Click a column to drop a piece. The browser AI uses a compact heuristic search inspired by the original Python project, tuned for instant static-site play.
+                </p>
+            </div>
+        </div>
+
+        <div class="border border-stone-200 rounded-lg bg-white/70 p-5">
+            <p class="text-xs tracking-widest uppercase text-stone-400 mb-3">Original idea</p>
+            <p class="text-sm text-stone-600 font-light leading-relaxed">
+                The college version evaluated board states with score differences, game-phase heuristics, and search over valid actions including PopOut. This frontend keeps the familiar game interaction while preserving the source files in the project folder.
+            </p>
+        </div>
+    </section>
+</main>
+
+<script>
+    lucide.createIcons();
+
+    const ROWS = 6;
+    const COLS = 7;
+    const HUMAN = 1;
+    const AI = 2;
+    const SEARCH_DEPTH = 2;
+    let board = [];
+    let currentPlayer = HUMAN;
+    let gameOver = false;
+    let aiMode = true;
+    let isThinking = false;
+    let searchToken = 0;
+    let searchDelay = 240;
+    let scores = { human: 0, ai: 0 };
+
+    const boardEl = document.getElementById('board');
+    const controlsEl = document.getElementById('column-controls');
+    const statusEl = document.getElementById('status');
+    const scoreEl = document.getElementById('score');
+    const resetButton = document.getElementById('reset');
+    const humanModeButton = document.getElementById('human-mode');
+    const localModeButton = document.getElementById('local-mode');
+    const searchCard = document.getElementById('search-card');
+    const searchSummary = document.getElementById('search-summary');
+    const treeEl = document.getElementById('tree');
+    const delaySlider = document.getElementById('delay-slider');
+    const delayValue = document.getElementById('delay-value');
+
+    function createBoard() {
+        searchToken += 1;
+        board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+        currentPlayer = HUMAN;
+        gameOver = false;
+        isThinking = false;
+        clearSearchTree();
+        render();
+        setStatus('Your move');
+    }
+
+    function render() {
+        boardEl.innerHTML = '';
+        controlsEl.innerHTML = '';
+
+        for (let col = 0; col < COLS; col += 1) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'column-button border border-stone-200 bg-white text-stone-700 hover:border-stone-400 hover:bg-stone-100 transition-colors text-sm font-medium';
+            button.setAttribute('aria-label', `Drop in column ${col + 1}`);
+            button.textContent = col + 1;
+            button.disabled = gameOver || isThinking || board[0][col] !== 0 || (aiMode && currentPlayer === AI);
+            button.addEventListener('click', () => playMove(col));
+            controlsEl.appendChild(button);
+        }
+
+        for (let row = 0; row < ROWS; row += 1) {
+            for (let col = 0; col < COLS; col += 1) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                if (board[row][col] === HUMAN) cell.classList.add('player-one');
+                if (board[row][col] === AI) cell.classList.add('player-two');
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                boardEl.appendChild(cell);
+            }
+        }
+    }
+
+    async function playMove(col) {
+        if (gameOver || isThinking || (aiMode && currentPlayer === AI)) return;
+        const row = getOpenRow(board, col);
+        if (row === -1) return;
+
+        board[row][col] = currentPlayer;
+        render();
+
+        if (finishTurnIfDone()) return;
+
+        currentPlayer = currentPlayer === HUMAN ? AI : HUMAN;
+        setStatus(aiMode && currentPlayer === AI ? 'AI is thinking' : currentPlayer === HUMAN ? 'Red to move' : 'Yellow to move');
+        render();
+
+        if (aiMode && currentPlayer === AI) {
+            await runAiTurn();
+        }
+    }
+
+    function getOpenRow(targetBoard, col) {
+        for (let row = ROWS - 1; row >= 0; row -= 1) {
+            if (targetBoard[row][col] === 0) return row;
+        }
+        return -1;
+    }
+
+    function getValidColumns(targetBoard) {
+        return Array.from({ length: COLS }, (_, col) => col).filter(col => targetBoard[0][col] === 0);
+    }
+
+    function cloneBoard(targetBoard) {
+        return targetBoard.map(row => row.slice());
+    }
+
+    async function runAiTurn() {
+        const token = searchToken;
+        isThinking = true;
+        render();
+        setStatus('AI is searching');
+
+        const search = buildMinimaxSearch(board, SEARCH_DEPTH);
+        const completed = await animateSearch(search, token);
+        if (!completed || token !== searchToken || gameOver) return;
+
+        const col = search.bestColumn;
+        const row = getOpenRow(board, col);
+        if (row !== -1) board[row][col] = AI;
+        isThinking = false;
+        render();
+
+        if (finishTurnIfDone()) return;
+
+        currentPlayer = HUMAN;
+        setStatus('Your move');
+        render();
+    }
+
+    function buildMinimaxSearch(sourceBoard, depthLimit) {
+        const nodes = [];
+        let nextId = 0;
+        const rootBoard = cloneBoard(sourceBoard);
+        const rootId = addSearchNode(null, 0, AI, null, 'max', 'AI compares legal moves');
+        const score = minimax(rootBoard, depthLimit, true, -Infinity, Infinity, rootId);
+        const rootChildren = nodes.filter(node => node.parentId === rootId);
+        const bestChild = rootChildren
+            .filter(node => typeof node.score === 'number')
+            .sort((a, b) => b.score - a.score || Math.abs(a.column - 3) - Math.abs(b.column - 3))[0];
+
+        nodes[rootId].score = score;
+        nodes[rootId].note = bestChild ? `Best move is column ${bestChild.column + 1}` : 'No legal move found';
+
+        return {
+            nodes,
+            rootId,
+            bestNodeId: bestChild ? bestChild.id : rootId,
+            bestColumn: bestChild ? bestChild.column : getValidColumns(sourceBoard)[0],
+        };
+
+        function addSearchNode(parentId, depth, player, column, role, note) {
+            const node = {
+                id: nextId,
+                parentId,
+                depth,
+                player,
+                column,
+                role,
+                note,
+                score: null,
+            };
+            nodes.push(node);
+            nextId += 1;
+            return node.id;
+        }
+
+        function minimax(targetBoard, depth, maximizing, alpha, beta, parentId) {
+            const result = getWinner(targetBoard);
+            const validColumns = orderColumns(getValidColumns(targetBoard));
+            if (result.winner || depth === 0 || validColumns.length === 0) {
+                return terminalScore(targetBoard, result.winner, depth);
+            }
+
+            if (maximizing) {
+                let value = -Infinity;
+                for (const col of validColumns) {
+                    const nextBoard = cloneBoard(targetBoard);
+                    nextBoard[getOpenRow(nextBoard, col)][col] = AI;
+                    const childId = addSearchNode(parentId, depthLimit - depth + 1, AI, col, 'max', 'AI tries this move');
+                    const childScore = minimax(nextBoard, depth - 1, false, alpha, beta, childId);
+                    nodes[childId].score = childScore;
+                    nodes[childId].note = `AI move column ${col + 1}`;
+                    value = Math.max(value, childScore);
+                    alpha = Math.max(alpha, value);
+                    if (beta <= alpha) {
+                        nodes[childId].note += ' | prune remaining siblings';
+                        break;
+                    }
+                }
+                return value;
+            }
+
+            let value = Infinity;
+            for (const col of validColumns) {
+                const nextBoard = cloneBoard(targetBoard);
+                nextBoard[getOpenRow(nextBoard, col)][col] = HUMAN;
+                const childId = addSearchNode(parentId, depthLimit - depth + 1, HUMAN, col, 'min', 'Human response considered');
+                const childScore = minimax(nextBoard, depth - 1, true, alpha, beta, childId);
+                nodes[childId].score = childScore;
+                nodes[childId].note = `Human reply column ${col + 1}`;
+                value = Math.min(value, childScore);
+                beta = Math.min(beta, value);
+                if (beta <= alpha) {
+                    nodes[childId].note += ' | prune remaining siblings';
+                    break;
+                }
+            }
+            return value;
+        }
+    }
+
+    function orderColumns(columns) {
+        return columns.slice().sort((a, b) => Math.abs(a - 3) - Math.abs(b - 3));
+    }
+
+    function terminalScore(targetBoard, winner, depthRemaining) {
+        if (winner === AI) return 100000 + depthRemaining * 100;
+        if (winner === HUMAN) return -100000 - depthRemaining * 100;
+        if (isFull(targetBoard)) return 0;
+        return scorePosition(targetBoard, AI);
+    }
+
+    async function animateSearch(search, token) {
+        renderTreeSkeleton(search);
+        searchSummary.textContent = `Exploring ${search.nodes.length} nodes at depth ${SEARCH_DEPTH}.`;
+
+        for (const node of search.nodes) {
+            if (token !== searchToken) return false;
+            const nodeEl = document.getElementById(`tree-node-${node.id}`);
+            const edgeEl = document.getElementById(`tree-edge-${node.id}`);
+            if (!nodeEl) continue;
+            if (edgeEl) edgeEl.classList.add('visible');
+            requestAnimationFrame(() => nodeEl.classList.add('visible', 'active'));
+            nodeEl.scrollIntoView({ block: 'nearest', inline: 'center' });
+            await wait(searchDelay);
+            nodeEl.classList.remove('active');
+        }
+
+        const bestEl = document.getElementById(`tree-node-${search.bestNodeId}`);
+        if (bestEl) bestEl.classList.add('best');
+        highlightBestPath(search.bestNodeId);
+        searchSummary.textContent = `AI chooses column ${search.bestColumn + 1}.`;
+        await wait(Math.min(searchDelay, 300));
+        return true;
+    }
+
+    function renderTreeSkeleton(search) {
+        lastRenderedSearchNodes = search.nodes;
+        const layout = createTreeLayout(search.nodes);
+        const canvas = document.createElement('div');
+        canvas.className = 'tree-canvas';
+        canvas.style.width = `${layout.width}px`;
+        canvas.style.height = `${layout.height}px`;
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'tree-edges');
+        svg.setAttribute('viewBox', `0 0 ${layout.width} ${layout.height}`);
+        svg.setAttribute('preserveAspectRatio', 'none');
+
+        search.nodes.forEach(node => {
+            if (node.parentId === null) return;
+            const parent = layout.positions.get(node.parentId);
+            const child = layout.positions.get(node.id);
+            if (!parent || !child) return;
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const midY = parent.y + (child.y - parent.y) * 0.52;
+            path.setAttribute('id', `tree-edge-${node.id}`);
+            path.setAttribute('class', 'tree-edge');
+            path.setAttribute('d', `M ${parent.x} ${parent.y + 28} C ${parent.x} ${midY}, ${child.x} ${midY}, ${child.x} ${child.y - 28}`);
+            svg.appendChild(path);
+        });
+
+        canvas.appendChild(svg);
+
+        search.nodes.forEach(node => {
+            const pos = layout.positions.get(node.id);
+            const nodeEl = document.createElement('div');
+            nodeEl.id = `tree-node-${node.id}`;
+            nodeEl.className = 'tree-visual-node';
+            nodeEl.style.left = `${pos.x}px`;
+            nodeEl.style.top = `${pos.y}px`;
+            nodeEl.title = node.note;
+            nodeEl.innerHTML = `
+                <div class="flex items-center justify-center gap-1.5">
+                    <span class="tree-chip ${nodeChipClass(node)}">${nodeSymbol(node)}</span>
+                    <span class="font-medium text-stone-900">${nodeShortLabel(node)}</span>
+                </div>
+                <div class="text-xs text-stone-500 mt-1">${formatScore(node.score)}</div>
+            `;
+            canvas.appendChild(nodeEl);
+        });
+
+        treeEl.innerHTML = '';
+        treeEl.appendChild(canvas);
+    }
+
+    function createTreeLayout(nodes) {
+        const children = new Map();
+        nodes.forEach(node => children.set(node.id, []));
+        nodes.forEach(node => {
+            if (node.parentId !== null) children.get(node.parentId).push(node.id);
+        });
+
+        const positions = new Map();
+        const leafGap = 96;
+        const levelGap = 108;
+        const margin = 52;
+        let leafIndex = 0;
+        const xCache = new Map();
+
+        function assignX(nodeId) {
+            if (xCache.has(nodeId)) return xCache.get(nodeId);
+            const nodeChildren = children.get(nodeId);
+            if (!nodeChildren || nodeChildren.length === 0) {
+                const x = margin + leafIndex * leafGap;
+                leafIndex += 1;
+                xCache.set(nodeId, x);
+                return x;
+            }
+
+            const childXs = nodeChildren.map(assignX);
+            const x = (Math.min(...childXs) + Math.max(...childXs)) / 2;
+            xCache.set(nodeId, x);
+            return x;
+        }
+
+        function assignPositions(nodeId, depth) {
+            const x = assignX(nodeId);
+            positions.set(nodeId, { x, y: margin + depth * levelGap });
+            children.get(nodeId).forEach(childId => assignPositions(childId, depth + 1));
+        }
+
+        const root = nodes.find(node => node.parentId === null);
+        assignPositions(root.id, 0);
+
+        const maxDepth = Math.max(...nodes.map(node => node.depth));
+        return {
+            positions,
+            width: Math.max(720, margin * 2 + Math.max(1, leafIndex - 1) * leafGap),
+            height: margin * 2 + maxDepth * levelGap,
+        };
+    }
+
+    function highlightBestPath(nodeId) {
+        let current = nodeId;
+        while (current !== null && typeof current !== 'undefined') {
+            const nodeEl = document.getElementById(`tree-node-${current}`);
+            const edgeEl = document.getElementById(`tree-edge-${current}`);
+            if (nodeEl) nodeEl.classList.add('best');
+            if (edgeEl) edgeEl.classList.add('best', 'visible');
+            const node = getRenderedSearchNode(current);
+            current = node ? node.parentId : null;
+        }
+    }
+
+    let lastRenderedSearchNodes = [];
+
+    function getRenderedSearchNode(id) {
+        return lastRenderedSearchNodes.find(node => node.id === id);
+    }
+
+    function nodeLabel(node) {
+        if (node.parentId === null) return 'Root position';
+        const actor = node.player === AI ? 'AI' : 'Human';
+        const role = node.role === 'max' ? 'max' : 'min';
+        return `${actor} c${node.column + 1} (${role})`;
+    }
+
+    function nodeShortLabel(node) {
+        if (node.parentId === null) return 'root';
+        return `c${node.column + 1}`;
+    }
+
+    function nodeChipClass(node) {
+        if (node.parentId === null) return 'root';
+        return node.player === AI ? 'ai' : 'human';
+    }
+
+    function nodeSymbol(node) {
+        if (node.parentId === null) return 'R';
+        return node.player === AI ? 'Y' : 'R';
+    }
+
+    function formatScore(score) {
+        if (score === null || typeof score === 'undefined') return '...';
+        if (score > 90000) return '+win';
+        if (score < -90000) return '-loss';
+        return Math.round(score);
+    }
+
+    function clearSearchTree() {
+        if (treeEl) treeEl.innerHTML = '';
+        if (searchSummary) searchSummary.textContent = aiMode ? 'Waiting for the AI turn.' : 'Available in Human vs AI mode.';
+    }
+
+    function wait(ms) {
+        return new Promise(resolve => window.setTimeout(resolve, ms));
+    }
+
+    function scorePosition(targetBoard, player) {
+        const opponent = player === HUMAN ? AI : HUMAN;
+        let score = 0;
+        const centerCount = targetBoard.map(row => row[3]).filter(value => value === player).length;
+        score += centerCount * 6;
+
+        const windows = collectWindows(targetBoard);
+        for (const windowCells of windows) {
+            score += evaluateWindow(windowCells, player);
+            score -= evaluateWindow(windowCells, opponent) * 1.15;
+        }
+        return score;
+    }
+
+    function collectWindows(targetBoard) {
+        const windows = [];
+        for (let row = 0; row < ROWS; row += 1) {
+            for (let col = 0; col <= COLS - 4; col += 1) windows.push([0, 1, 2, 3].map(offset => targetBoard[row][col + offset]));
+        }
+        for (let col = 0; col < COLS; col += 1) {
+            for (let row = 0; row <= ROWS - 4; row += 1) windows.push([0, 1, 2, 3].map(offset => targetBoard[row + offset][col]));
+        }
+        for (let row = 0; row <= ROWS - 4; row += 1) {
+            for (let col = 0; col <= COLS - 4; col += 1) windows.push([0, 1, 2, 3].map(offset => targetBoard[row + offset][col + offset]));
+        }
+        for (let row = 3; row < ROWS; row += 1) {
+            for (let col = 0; col <= COLS - 4; col += 1) windows.push([0, 1, 2, 3].map(offset => targetBoard[row - offset][col + offset]));
+        }
+        return windows;
+    }
+
+    function evaluateWindow(windowCells, player) {
+        const count = windowCells.filter(value => value === player).length;
+        const empty = windowCells.filter(value => value === 0).length;
+        if (count === 4) return 1000;
+        if (count === 3 && empty === 1) return 50;
+        if (count === 2 && empty === 2) return 8;
+        return 0;
+    }
+
+    function getWinner(targetBoard) {
+        const directions = [[0, 1], [1, 0], [1, 1], [1, -1]];
+        for (let row = 0; row < ROWS; row += 1) {
+            for (let col = 0; col < COLS; col += 1) {
+                const player = targetBoard[row][col];
+                if (!player) continue;
+                for (const [rowDelta, colDelta] of directions) {
+                    const cells = [[row, col]];
+                    for (let step = 1; step < 4; step += 1) {
+                        const nextRow = row + rowDelta * step;
+                        const nextCol = col + colDelta * step;
+                        if (nextRow < 0 || nextRow >= ROWS || nextCol < 0 || nextCol >= COLS || targetBoard[nextRow][nextCol] !== player) break;
+                        cells.push([nextRow, nextCol]);
+                    }
+                    if (cells.length === 4) return { winner: player, cells };
+                }
+            }
+        }
+        return { winner: 0, cells: [] };
+    }
+
+    function endGame(result) {
+        gameOver = true;
+        isThinking = false;
+        disableControls();
+        result.cells.forEach(([row, col]) => {
+            const cell = boardEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            if (cell) cell.classList.add('winning');
+        });
+
+        if (result.winner === HUMAN) {
+            scores.human += 1;
+            setStatus(aiMode ? 'You won' : 'Red won');
+        } else {
+            scores.ai += 1;
+            setStatus(aiMode ? 'AI won' : 'Yellow won');
+        }
+        updateScore();
+    }
+
+    function finishTurnIfDone() {
+        const result = getWinner(board);
+        if (result.winner) {
+            endGame(result);
+            return true;
+        }
+
+        if (isFull(board)) {
+            gameOver = true;
+            isThinking = false;
+            setStatus('Draw game');
+            render();
+            return true;
+        }
+
+        return false;
+    }
+
+    function disableControls() {
+        controlsEl.querySelectorAll('button').forEach(button => {
+            button.disabled = true;
+        });
+    }
+
+    function isFull(targetBoard) {
+        return targetBoard[0].every(value => value !== 0);
+    }
+
+    function setStatus(message) {
+        statusEl.textContent = message;
+    }
+
+    function updateScore() {
+        scoreEl.textContent = aiMode ? `Human ${scores.human} - AI ${scores.ai}` : `Red ${scores.human} - Yellow ${scores.ai}`;
+    }
+
+    function setMode(nextAiMode) {
+        aiMode = nextAiMode;
+        scores = { human: 0, ai: 0 };
+        updateScore();
+        searchCard.classList.toggle('hidden', !aiMode);
+        humanModeButton.className = aiMode ? 'mode-button flex-1 px-3 py-2 rounded-lg bg-stone-900 text-stone-50 text-sm' : 'mode-button flex-1 px-3 py-2 rounded-lg border border-stone-200 text-sm';
+        localModeButton.className = aiMode ? 'mode-button flex-1 px-3 py-2 rounded-lg border border-stone-200 text-sm' : 'mode-button flex-1 px-3 py-2 rounded-lg bg-stone-900 text-stone-50 text-sm';
+        createBoard();
+    }
+
+    resetButton.addEventListener('click', createBoard);
+    humanModeButton.addEventListener('click', () => setMode(true));
+    localModeButton.addEventListener('click', () => setMode(false));
+    delaySlider.addEventListener('input', () => {
+        searchDelay = Number(delaySlider.value);
+        delayValue.textContent = `${searchDelay} ms`;
+    });
+
+    updateScore();
+    clearSearchTree();
+    createBoard();
+</script>
+</body>
+</html>

@@ -24,18 +24,36 @@
 
         .no-scroll { overflow: hidden; }
 
-        /* Style for plain text links to keep them subtle but clear */
         .content-link {
             text-decoration: underline;
             text-decoration-color: #d6d3d1;
             text-underline-offset: 4px;
             color: #1c1917;
+            font-weight: 700;
             transition: all 0.2s;
         }
         .content-link:hover {
             text-decoration-color: #1c1917;
             background-color: #f5f5f4;
         }
+
+        /* Variable & Keyword Styles */
+        .kw { font-weight: 800; font-family: 'Courier New', Courier, monospace; }
+        
+        /* Climate Variables */
+        .var-soil { color: #2d6a4f; } 
+        .var-heat { color: #bc4749; } 
+        .var-pbl { color: #0077b6; }  
+        .var-land { color: #8c7851; } 
+
+        /* Institutes & Labs */
+        .kw-inst { color: #4361ee; font-family: inherit; font-weight: 700; }
+        
+        /* Media & Arts */
+        .kw-media { color: #7209b7; font-family: inherit; font-style: italic; font-weight: 600; }
+
+        /* Philosphy & Life */
+        .kw-life { color: #f72585; font-family: inherit; font-weight: 700; }
     </style>
     <script>
         tailwind.config = {
@@ -57,7 +75,7 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-stone-200 selection:text-stone-900">
 
@@ -96,23 +114,52 @@
 
     <main class="pt-32 pb-20 px-6 max-w-3xl mx-auto">
         
-        <div class="fade-in space-y-8 text-stone-600 font-light leading-relaxed text-lg whitespace-pre-line" style="animation-delay: 0.1s;">
+        <div class="fade-in mb-10 w-full h-[33vh] min-h-[250px] rounded-lg overflow-hidden shadow-sm" style="animation-delay: 0.05s;">
+            <img src="images/cover_atharv_ldkh.JPG" alt="Atharva" class="w-full h-full object-cover object-center">
+        </div>
+
+        <div id="about" class="fade-in space-y-8 text-stone-600 font-light leading-relaxed text-lg whitespace-pre-line" style="animation-delay: 0.1s;">
             Hi Dear Reader! 
             
-            Thank you for landing on this page. I am Atharv Dabli, and I (as of April 2026) work as a Research Assistant at ICTD lab, IIT Delhi.
+            Thank you for landing on this page. I am Atharv Dabli, and I (as of April 2026) work as a Research Assistant at <span class="kw-inst">ICTD lab, IIT Delhi</span>.
 
-            Currently, I work with professor <a href="https://homecse.iitd.ac.in/team/aaditeshwar-seth/" class="content-link" target="_blank">Aaditeshwar Seth</a> on building a Knowledge Graph based retrieval system for local climate and land-atmosphere interaction understanding. The idea is to make a structured knowledge base which captures various climate variables (e.g. soil_moisture, latent_heat_flux, planetary_boundary_layer, land_use etc.) and the relationships between them (how they influence one another), under different climate regimes or contexts. This graph can then be reasoned and queried through by algorithms and using LLMs to generate evidence-based answers for various user queries (e.g. : Would afforestation improve precipitation in a given region?). We are using the large climate science literature, which can be roughly regarded as an unstructured knowledge source. The work here would help in answering various queries including land use suggestions for a climate resilient future. Hopefully, this would be useful for planning and also creating a framework for other similar studies.
+            Currently, I work with professor <a href="https://homecse.iitd.ac.in/team/aaditeshwar-seth/" class="content-link" target="_blank" style="color:#4361ee">Aaditeshwar Seth</a> on building a <span class="kw-life">Knowledge Graph</span> based retrieval system for local climate and land-atmosphere interaction understanding. The idea is to make a structured knowledge base which captures various climate variables (e.g. <span class="kw var-soil">soil_moisture</span>, <span class="kw var-heat">latent_heat_flux</span>, <span class="kw var-pbl">planetary_boundary_layer</span>, <span class="kw var-land">land_use</span> etc.) and the relationships between them (how they influence one another), under different climate regimes or contexts. This graph can then be reasoned and queried through by algorithms and using <span class="kw-life">LLMs</span> to generate evidence-based answers for various user queries (e.g. : Would afforestation improve precipitation in a given region?). We are using the large <span class="kw-inst">climate science literature</span>, which can be roughly regarded as an unstructured knowledge source. The work here would help in answering various queries including land use suggestions for a climate resilient future. Hopefully, this would be useful for planning and also creating a framework for other similar studies.
 
-            Starting this fall (Sept. 2026), I'd be joining <a href="https://ethz.ch/en.html" class="content-link" target="_blank">ETH Zurich</a>, where I’d be majoring in atmosphere and climate sciences. (MSc Environmental Science, major in Atmosphere and Climate) and I plan to take a deep dive into paleo-climatology, climate processes and feedback, modelling, high performance computing and some remote sensing (esp. radar remote sensing since it seems to be quite useful in various applications).
+            Starting this fall (Sept. 2026), I'd be joining <a href="https://ethz.ch/en.html" class="content-link" target="_blank" style="color:#4361ee">ETH Zurich</a>, where I’d be majoring in <span class="kw-inst">atmosphere and climate sciences</span>. (MSc Environmental Science, major in Atmosphere and Climate) and I plan to take a deep dive into paleo-climatology, climate processes and feedback, modelling, high performance computing and some remote sensing (esp. <span class="kw-inst">radar remote sensing</span> since it seems to be quite useful in various applications).
 
-            I graduated with a B.Tech. in Computer Science and Engineering at IIT Delhi, with a minor area in Atmospheric Sciences. I worked for a year as a Data Scientist at SkanAI in Bengaluru, before going back to my ‘academic home’ in Delhi.
+            I graduated with a B.Tech. in <span class="kw-inst">Computer Science and Engineering</span> at <span class="kw-inst">IIT Delhi</span>, with a minor area in <span class="kw-inst">Atmospheric Sciences</span>. I worked for a year as a Data Scientist at <span class="kw-inst">SkanAI</span> in Bengaluru, before going back to my ‘academic home’ in Delhi.
 
-            Science TV Shows & Documentaries (Cosmos : A spacetime odyssey, Nova, How the universe works etc.), Nature Documentaries (Our Planet, My Octopus Teacher etc.) and History Shows (especially related to history of science, and wars) are something that I like to watch a lot, especially during my middle and high school years, and had a deep impact on me developing curiosity and questioning the ‘ways of the universe’, and reflecting upon life in general.
+            Science TV Shows & Documentaries (<span class="kw-media">Cosmos : A spacetime odyssey</span>, <span class="kw-media">Nova</span>, <span class="kw-media">How the universe works</span> etc.), Nature Documentaries (<span class="kw-media">Our Planet</span>, <span class="kw-media">My Octopus Teacher</span> etc.) and History Shows (especially related to history of science, and wars) are something that I like to watch a lot, especially during my middle and high school years, and had a deep impact on me developing curiosity and questioning the ‘ways of the universe’, and reflecting upon life in general.
 
-            Since my undergrad years, philosophy as taught by GOAT <a href="https://acharyaprashant.org/" class="content-link" target="_blank">Acharya Prashant</a>, has had deep impact on me, and even though the impact of psychological and philosophical understanding is first intrinsic, I believe this has been well expressed in my life where I have learned to not conform to others, turned a vegan out of a will to not participate in cruelty towards animals and want to understand and work towards the problems like climate change affecting our home. 
+            Since my undergrad years, philosophy as taught by GOAT <a href="https://acharyaprashant.org/" class="content-link" target="_blank" style="color:#f72585">Acharya Prashant</a>, has had deep impact on me, and even though the impact of psychological and philosophical understanding is first intrinsic, I believe this has been well expressed in my life where I have learned to not conform to others, turned a <span class="kw-life">vegan</span> out of a will to not participate in cruelty towards animals and want to understand and work towards the problems like <span class="kw-life">climate change</span> affecting our home. 
 
-            Some of the movies or TV shows that have had an impact on me or I enjoyed are Into the Wild, Fight Club, Office Space, Schindler’s List, The Pianist, Rick and Morty. I like travelling, learning the piano, and have started training in Jiu Jitsu.
+            Some of the movies or TV shows that have had an impact on me or I enjoyed are <span class="kw-media">Into the Wild</span>, <span class="kw-media">Fight Club</span>, <span class="kw-media">Office Space</span>, <span class="kw-media">Schindler’s List</span>, <span class="kw-media">The Pianist</span>, <span class="kw-media">Rick and Morty</span>. I like travelling, learning the <span class="kw-media">piano</span>, and have started training in <span class="kw-life">Jiu Jitsu</span>.
         </div>
+
+        <section id="work" class="border-t border-stone-200 mt-20 pt-12 fade-in" style="animation-delay: 0.2s;">
+            <p class="text-stone-400 text-sm tracking-widest uppercase mb-4">Work</p>
+            <h2 class="text-3xl md:text-4xl font-serif leading-tight mb-6">Projects</h2>
+            <a href="connect-four.html" class="group block border border-stone-200 bg-white/60 rounded-lg p-6 hover:border-stone-400 hover:bg-white transition-all">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 text-stone-50">
+                                <i data-lucide="grid-3x3" class="w-4 h-4"></i>
+                            </span>
+                            <p class="text-sm text-stone-400 tracking-widest uppercase">College AI Project</p>
+                        </div>
+                        <h3 class="text-2xl font-medium text-stone-900 mb-3">Connect Four</h3>
+                        <p class="text-stone-600 font-light leading-relaxed max-w-xl">
+                            A browser-facing version of my old Connect Four AI assignment, with the original Python project and report linked for context.
+                        </p>
+                    </div>
+                    <span class="inline-flex items-center gap-2 text-sm font-medium text-stone-900 group-hover:gap-3 transition-all">
+                        Open project
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </span>
+                </div>
+            </a>
+        </section>
 
         <section id="contact" class="border-t border-stone-200 mt-20 pt-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 fade-in" style="animation-delay: 0.3s;">
             <div class="flex gap-4">
@@ -139,7 +186,7 @@
         }
 
         function copyEmail() {
-            const email = "hello@Atharvagallery.com";
+            const email = "atharva2309@gmail.com";
             navigator.clipboard.writeText(email).then(() => {
                 const toast = document.getElementById('toast');
                 toast.classList.remove('translate-y-20', 'opacity-0');
