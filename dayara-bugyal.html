@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dayara Bugyal | Atharva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { stone: { 50:'#fafaf9',100:'#f5f5f4',200:'#e7e5e4',300:'#d6d3d1',400:'#a8a29e',500:'#78716c',600:'#57534e',800:'#292524',900:'#1c1917'} },
+                    fontFamily: { sans:['Inter','sans-serif'], serif:['Playfair Display','serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="gallery-styles.css">
+</head>
+<body class="photo-page text-stone-800 font-sans antialiased selection:bg-stone-200 selection:text-stone-900">
+    <nav class="fixed top-0 w-full site-nav z-40 border-b border-stone-100">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-serif tracking-tight font-medium hover:text-stone-600 transition-colors">Atharva.</a>
+            <div class="hidden md:flex space-x-8 text-sm font-light tracking-wide text-stone-500">
+                <a href="index.html">Home</a>
+                <a href="books.html" class="hover:text-stone-900 transition-colors">Books</a>
+                <a href="index.html#work" class="hover:text-stone-900 transition-colors">Work</a>
+                <a href="gallery.html" class="text-stone-900 border-b border-stone-900">Gallery</a>
+                <a href="activities.html" class="hover:text-stone-900 transition-colors">Activities</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <header class="grid lg:grid-cols-[minmax(0,1fr)_24rem] gap-8 items-start mb-12 fade-in">
+            <div>
+                <a href="gallery.html" class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-stone-900 mb-8">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Gallery
+                </a>
+                <p class="text-stone-400 text-sm tracking-widest uppercase mb-3">Travel</p>
+                <h1 class="text-4xl md:text-5xl font-serif leading-tight mb-5">Dayara Bugyal</h1>
+                <p class="text-stone-600 font-light leading-relaxed max-w-2xl">Meadows, trail details, rolling slopes, and clouds from the Uttarakhand trek. The pin is approximate because the images do not carry usable GPS.</p>
+            </div>
+            <aside class="map-card rounded-lg p-3 lg:sticky lg:top-28">
+                <div class="map-frame">
+                    <iframe title="Approximate map location for Dayara Bugyal" src="https://www.openstreetmap.org/export/embed.html?bbox=78.35%2C30.70%2C78.75%2C30.95&layer=mapnik&marker=30.8669%2C78.5695" loading="lazy"></iframe>
+                </div>
+                <div class="px-1 pt-3">
+                    <p class="text-xs tracking-widest uppercase text-stone-400 mb-2">Approximate map</p>
+                    <p class="text-sm text-stone-600 font-light leading-relaxed">Dayara Bugyal region near Barsu/Raithal in Uttarkashi, inferred from folder name.</p>
+                </div>
+            </aside>
+        </header>
+
+        <section class="photo-slideshow fade-in" style="animation-delay: 0.08s;">
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251003113138_0774_D.JPG" alt="Moss detail on Dayara Bugyal trail" loading="lazy"><figcaption>A close look at moss and stones along the trail.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004111356_0891_D.JPG" alt="Dayara Bugyal meadow slope" loading="lazy"><figcaption>Open meadow slopes with a small trail line across the ridge.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004111401_0892_D.JPG" alt="Forest edge at Dayara Bugyal" loading="lazy"><figcaption>The meadow meeting a darker forest edge.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004111418_0894_D.JPG" alt="Meadow with animal skull at Dayara Bugyal" loading="lazy"><figcaption>A wide meadow frame with a weathered skull in the foreground.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004113311_0900_D.JPG" alt="Stream through Dayara Bugyal" loading="lazy"><figcaption>A small stream cutting through the grassland.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004121557_0902_D.JPG" alt="Green slopes at Dayara Bugyal" loading="lazy"><figcaption>Green slopes rising gently under fast-moving clouds.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004121628_0908_D.JPG" alt="Clouds over Dayara Bugyal" loading="lazy"><figcaption>Clouds rolling over the meadow and tree line.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004122837_0920_D.JPG" alt="Trail through rocky Dayara Bugyal slope" loading="lazy"><figcaption>A rocky stretch of trail leading up the slope.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004124111_0923_D.JPG" alt="Hiker on Dayara Bugyal slope" loading="lazy"><figcaption>A lone hiker gives scale to the meadow and ridge.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004133555_0926_D.JPG" alt="Mist over Dayara Bugyal hills" loading="lazy"><figcaption>Mist closing in over the higher slopes.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004133646_0928_D.JPG" alt="Vertical tree stump at Dayara Bugyal" loading="lazy"><figcaption>A sharp tree-stump detail against a cloudy sky.</figcaption></figure>
+            <figure class="photo-card"><img src="images/dayara_bugyal/DJI_20251004134153_0931_D.JPG" alt="Foggy Dayara Bugyal meadow" loading="lazy"><figcaption>Fog softening the meadow and hiding the distant ridges.</figcaption></figure>
+        </section>
+    </main>
+    <script>const SHOW_PHOTO_CAPTIONS = false;</script>
+    <script src="gallery-scripts.js"></script>
+    <script>applyCaptionPreference(SHOW_PHOTO_CAPTIONS);</script>
+</body>
+</html>

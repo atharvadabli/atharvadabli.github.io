@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ladakh | Atharva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { stone: { 50:'#fafaf9',100:'#f5f5f4',200:'#e7e5e4',300:'#d6d3d1',400:'#a8a29e',500:'#78716c',600:'#57534e',800:'#292524',900:'#1c1917'} },
+                    fontFamily: { sans:['Inter','sans-serif'], serif:['Playfair Display','serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="gallery-styles.css">
+</head>
+<body class="photo-page text-stone-800 font-sans antialiased selection:bg-stone-200 selection:text-stone-900">
+    <nav class="fixed top-0 w-full site-nav z-40 border-b border-stone-100">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-serif tracking-tight font-medium hover:text-stone-600 transition-colors">Atharva.</a>
+            <div class="hidden md:flex space-x-8 text-sm font-light tracking-wide text-stone-500">
+                <a href="index.html">Home</a>
+                <a href="books.html" class="hover:text-stone-900 transition-colors">Books</a>
+                <a href="index.html#work" class="hover:text-stone-900 transition-colors">Work</a>
+                <a href="gallery.html" class="text-stone-900 border-b border-stone-900">Gallery</a>
+                <a href="activities.html" class="hover:text-stone-900 transition-colors">Activities</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <header class="grid lg:grid-cols-[minmax(0,1fr)_24rem] gap-8 items-start mb-12 fade-in">
+            <div>
+                <a href="gallery.html" class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-stone-900 mb-8">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Gallery
+                </a>
+                <p class="text-stone-400 text-sm tracking-widest uppercase mb-3">Travel</p>
+                <h1 class="text-4xl md:text-5xl font-serif leading-tight mb-5">Ladakh</h1>
+                <p class="text-stone-600 font-light leading-relaxed max-w-2xl">High-altitude lakes, open roads, monastery walls, and a few quiet night-sky frames. Locations are approximate because the files do not include usable GPS.</p>
+            </div>
+            <aside class="map-card rounded-lg p-3 lg:sticky lg:top-28">
+                <div class="map-frame">
+                    <iframe title="Approximate map location for Ladakh" src="https://www.openstreetmap.org/export/embed.html?bbox=76.72%2C33.45%2C79.75%2C34.95&layer=mapnik&marker=34.1526%2C77.5771" loading="lazy"></iframe>
+                </div>
+                <div class="px-1 pt-3">
+                    <p class="text-xs tracking-widest uppercase text-stone-400 mb-2">Approximate map</p>
+                    <p class="text-sm text-stone-600 font-light leading-relaxed">Leh and Pangong Tso region, inferred from visible lake, road, and town scenes.</p>
+                </div>
+            </aside>
+        </header>
+
+        <section class="photo-slideshow fade-in" style="animation-delay: 0.08s;">
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000101131507_0336_D.JPG" alt="Ladakh lake near dusk" loading="lazy"><figcaption>A quiet lake view as the light starts to drop behind the mountains.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000101131514_0337_D.JPG" alt="Road beside a lake in Ladakh" loading="lazy"><figcaption>Roadside view beside the water, with the mountains running parallel to the route.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000101141604_0400_D.JPG" alt="Sun over a lake in Ladakh" loading="lazy"><figcaption>Sunlight breaking through clouds over the lake and bare slopes.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000101180417_0424_D.JPG" alt="Blue lake in Ladakh" loading="lazy"><figcaption>The lake turns a clean blue under a soft, overcast sky.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000101180433_0425_D.JPG" alt="Pangong-like lake in Ladakh" loading="lazy"><figcaption>A wider lake frame with pale shallows near the shore.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000101181024_0428_D.JPG" alt="Prayer flags on a Ladakh road" loading="lazy"><figcaption>Prayer flags marking a bend on the road above the lake.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000406091809_0681_D.JPG" alt="Ladakh courtyard" loading="lazy"><figcaption>A simple courtyard framed by white walls and dry hills.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/DJI_20000406091830_0682_D.JPG" alt="Ladakh building and hills" loading="lazy"><figcaption>White buildings set against the brown, rocky backdrop.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250726_154916665_HDR.jpg" alt="Leh street and monastery hill" loading="lazy"><figcaption>A street scene with the monastery hill rising in the background.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250726_190023452_HDR.jpg" alt="Leh valley at evening" loading="lazy"><figcaption>Evening light spreading across the town and valley.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250727_090601086_HDR.jpg" alt="Two riders in Ladakh" loading="lazy"><figcaption>A quick riding stop before heading back onto the road.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250727_124505792_HDR.jpg" alt="Ladakh mountain valley" loading="lazy"><figcaption>A rocky valley with the road giving scale to the mountains.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250727_132303528_HDR.jpg" alt="Mountain road in Ladakh" loading="lazy"><figcaption>Open road, dry slopes, and a long stretch ahead.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250727_135518159_HDR.jpg" alt="Road bridge in Ladakh" loading="lazy"><figcaption>A narrow bridge cutting through the valley.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250727_173613054_HDR.jpg" alt="Stream crossing in Ladakh" loading="lazy"><figcaption>A pause near a clear stream and wooden bridge.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250728_091543086_HDR.jpg" alt="Ladakh mountain and clouds" loading="lazy"><figcaption>Clouds gathering over a broad, stony mountain face.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250728_175214305_HDR.jpg" alt="Road through Ladakh grassland" loading="lazy"><figcaption>The road runs through a flatter, golden stretch of land.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250730_183217583_HDR.jpg" alt="Bike near a wetland in Ladakh" loading="lazy"><figcaption>A bike stop near a small wetland and low hills.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250730_184234041_HDR.jpg" alt="Milky Way in Ladakh" loading="lazy"><figcaption>The Milky Way visible above a dark mountain outline.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250731_002900859.jpg" alt="Night sky in Ladakh" loading="lazy"><figcaption>Another night-sky frame with the mountains almost in silhouette.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250731_005925982.jpg" alt="Ladakh valley from a monastery wall" loading="lazy"><figcaption>A high view over the valley from a roadside wall.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250731_103202015_HDR.jpg" alt="Ladakh valley and clouds" loading="lazy"><figcaption>Blue sky, layered hills, and a wide valley below.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250731_103203735_HDR.jpg" alt="Monastery wall in Ladakh" loading="lazy"><figcaption>Stone steps and white walls along a monastery approach.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250731_105753149_HDR.jpg" alt="River valley in Ladakh" loading="lazy"><figcaption>A river bend cutting through the pale mountain valley.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250731_120533050_HDR.jpg" alt="Bookshelf in Ladakh" loading="lazy"><figcaption>A small indoor stop with books, posters, and local color.</figcaption></figure>
+            <figure class="photo-card"><img src="images/ladakh/IMG_20250731_215154380_HDR.jpg" alt="Ladakh monastery wall" loading="lazy"><figcaption>A close view of the old wall and stone base.</figcaption></figure>
+        </section>
+    </main>
+    <script>const SHOW_PHOTO_CAPTIONS = false;</script>
+    <script src="gallery-scripts.js"></script>
+    <script>applyCaptionPreference(SHOW_PHOTO_CAPTIONS);</script>
+</body>
+</html>

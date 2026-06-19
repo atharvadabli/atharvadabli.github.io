@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COL774 Machine Learning | Atharva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: { 50:'#fafaf9',100:'#f5f5f4',200:'#e7e5e4',300:'#d6d3d1',400:'#a8a29e',500:'#78716c',600:'#57534e',700:'#44403c',800:'#292524',900:'#1c1917' },
+                        cyan: { 50:'#ecfeff',100:'#cffafe',700:'#0e7490' },
+                        rose: { 50:'#fff1f2',100:'#ffe4e6',700:'#be123c' },
+                        amber: { 50:'#fffbeb',100:'#fef3c7',700:'#b45309' },
+                        indigo: { 50:'#eef2ff',100:'#e0e7ff',700:'#4338ca' }
+                    },
+                    fontFamily: { sans:['Inter','sans-serif'], serif:['Playfair Display','serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fafaf9; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+
+        .card {
+            border: 1px solid #e7e5e4;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.82);
+            box-shadow: 0 1rem 2rem rgba(41, 37, 36, 0.05);
+            min-width: 0;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border-radius: 999px;
+            border: 1px solid #e7e5e4;
+            background: #ffffff;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.72rem;
+            color: #57534e;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: #1c1917;
+            background: #ffffff;
+            box-shadow: 0 0.35rem 1rem rgba(41, 37, 36, 0.08);
+        }
+
+        .question-card[hidden] { display: none; }
+        .detail-body { display: none; }
+        .question-card.open .detail-body { display: block; }
+
+        .thumb {
+            aspect-ratio: 4 / 3;
+            width: 100%;
+            object-fit: contain;
+            border: 1px solid #e7e5e4;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 0.35rem;
+        }
+
+        .code-chip {
+            display: inline-flex;
+            border-radius: 6px;
+            background: #f5f5f4;
+            padding: 0.22rem 0.45rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            font-size: 0.75rem;
+            color: #292524;
+            overflow-wrap: anywhere;
+        }
+
+        .code-panel {
+            border-radius: 8px;
+            border: 1px solid #292524;
+            background: #1c1917;
+            box-shadow: 0 1rem 2rem rgba(28, 25, 23, 0.12);
+            overflow: hidden;
+        }
+
+        .code-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.75rem 1rem;
+            color: #d6d3d1;
+            font-size: 0.78rem;
+        }
+
+        .code-panel pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+            color: #f5f5f4;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            tab-size: 4;
+        }
+
+        .code-panel .kw { color: #67e8f9; font-weight: 700; }
+        .code-panel .fn { color: #fef08a; }
+        .code-panel .cm { color: #a8a29e; }
+        .code-panel .st { color: #86efac; }
+
+        @media (max-width: 640px) {
+            h1, h2, h3, p, a, code, span { overflow-wrap: anywhere; }
+            .pill { white-space: normal; }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-stone-200 selection:text-stone-900">
+    <nav class="fixed top-0 w-full bg-stone-50/90 backdrop-blur-sm z-40 border-b border-stone-100">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-serif tracking-tight font-medium hover:text-stone-600 transition-colors">Atharva.</a>
+            <div class="hidden md:flex space-x-8 text-sm font-light tracking-wide text-stone-500">
+                <a href="books.html" class="hover:text-stone-900 transition-colors">Books</a>
+                <a href="index.html#work" class="text-stone-900 border-b border-stone-900">Work</a>
+                <a href="gallery.html" class="hover:text-stone-900 transition-colors">Gallery</a>
+                <a href="index.html#about" class="hover:text-stone-900 transition-colors">About</a>
+                <a href="index.html#contact" class="hover:text-stone-900 transition-colors">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-6xl mx-auto">
+        <header class="mb-10">
+            <a href="index.html#work" class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-stone-900 mb-8">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Work
+            </a>
+            <div class="grid lg:grid-cols-[1fr_22rem] gap-8 items-end">
+                <div>
+                    <p class="text-stone-400 text-sm tracking-widest uppercase mb-4">COL774 · IIT Delhi · B.Tech year 2</p>
+                    <h1 class="text-4xl md:text-6xl font-serif leading-tight mb-6">Machine learning coursework, question by question</h1>
+                    <p class="text-stone-600 font-light leading-relaxed text-lg max-w-3xl">
+                        This page follows the assignment PDFs and points to the actual code I wrote: scripts, functions, notebooks, reports, generated plots, and saved outputs. It is organized by question rather than by generic ML topic.
+                    </p>
+                </div>
+                <div class="card p-5">
+                    <p class="text-xs tracking-widest uppercase text-stone-400 mb-3">Source material</p>
+                    <div class="space-y-3 text-sm">
+                        <a class="flex items-center justify-between gap-3 hover:text-stone-900 text-stone-600" target="_blank" href="projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/COL774_Machine_Learning_Assignment_1.pdf"><span>Assignment 1 PDF</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
+                        <a class="flex items-center justify-between gap-3 hover:text-stone-900 text-stone-600" target="_blank" href="projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/ass2_v1.pdf"><span>Assignment 2 PDF</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
+                        <a class="flex items-center justify-between gap-3 hover:text-stone-900 text-stone-600" target="_blank" href="projects/col774/a3/2020CS10328_Atharv_Dabli/ass3_v1.pdf"><span>Assignment 3 PDF</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="sticky top-20 z-30 bg-stone-50/90 backdrop-blur-sm border-y border-stone-200 py-3 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex flex-wrap gap-2" id="tabs">
+                    <button class="tab-btn active rounded-full px-4 py-2 text-sm text-stone-600 transition-all" data-filter="all">All questions</button>
+                    <button class="tab-btn rounded-full px-4 py-2 text-sm text-stone-600 transition-all" data-filter="a1">A1</button>
+                    <button class="tab-btn rounded-full px-4 py-2 text-sm text-stone-600 transition-all" data-filter="a2">A2</button>
+                    <button class="tab-btn rounded-full px-4 py-2 text-sm text-stone-600 transition-all" data-filter="a3">A3</button>
+                    <button id="expand-all" class="rounded-full px-4 py-2 text-sm text-stone-600 transition-all hover:bg-white hover:text-stone-900">Expand all</button>
+                </div>
+                <label class="relative block md:w-80">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"></i>
+                    <input id="search" class="w-full rounded-full border border-stone-200 bg-white py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-stone-200" placeholder="Search functions, questions, files">
+                </label>
+            </div>
+        </section>
+
+        <section id="question-list" class="space-y-5"></section>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                tag: 'a1',
+                assignment: 'Assignment 1',
+                number: 'Q1',
+                title: 'Linear Regression',
+                asked: 'Implement batch gradient descent, plot the data, draw the 3D cost mesh, draw contours of the error function, and compare different learning rates.',
+                explain: ['Linear regression fits a line by choosing parameters that minimize squared prediction error.', 'Batch gradient descent computes the error over the full training set before each parameter update, so every step follows the true loss gradient for the current data.', 'The 3D mesh and contour plots show the same cost function geometrically: the algorithm is moving downhill toward the minimum.', 'Changing the learning rate changes step size. Too small converges slowly; too large can overshoot and diverge.'],
+                did: ['Implemented batch gradient descent from first principles with normalization and checker-script output.', 'Generated data/regression, cost surface, and contour plots in the notebook workflow.', 'Reported final parameters theta0 = 0.00134 and theta1 = 0.99661 in the write-up.'],
+                functions: ['batchGradiantDescent(alpha, dataX, dataY, cost, maxIter=100000)'],
+                files: [
+                    ['q1.py', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q1/q1.py'],
+                    ['q1.ipynb', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q1/q1.ipynb']
+                ],
+                images: [
+                    ['Data plot and fitted line', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q1/Plots/Data%20Plot%20and%20Linear%20Regression.png'],
+                    ['Cost function surface', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q1/Plots/Cost%20Function.png'],
+                    ['Contour plot', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q1/Plots/Contour_1.png']
+                ],
+                result: 'Stopping criterion: cost < 1.1947899e-6 or iterations > 100000.'
+            },
+            {
+                tag: 'a1',
+                assignment: 'Assignment 1',
+                number: 'Q2',
+                title: 'Sampling and Stochastic Gradient Descent',
+                asked: 'Sample one million points from the given distribution, implement stochastic gradient descent, study batch sizes, and compare convergence behavior.',
+                explain: ['This question simulates a large regression dataset where the true data-generating parameters are known.', 'Stochastic gradient descent updates parameters using a batch rather than the whole dataset, making each update cheaper but noisier.', 'Small batches move fast but have high variance, so the loss path can zig-zag. Large batches are more stable but each update is more expensive.', 'The experiment shows the practical tradeoff between computation per step and gradient quality.'],
+                did: ['Generated x1, x2, noise, and y synthetically from the specified normal distributions.', 'Implemented mini-batch slicing and stochastic gradient updates.', 'Compared batch sizes 1, 100, 10000, and 1000000 with cost-vs-iteration plots.'],
+                functions: ['getBatch(dataX, dataY, batch_size)', 'stochasticGradiantDescent(alpha, dataX, dataY, cost, batch_size, n, maxEpoch=10)'],
+                files: [
+                    ['q2.py', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q2/q2.py'],
+                    ['q2.ipynb', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q2/q2.ipynb']
+                ],
+                images: [
+                    ['Batch size 1 trajectory', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q2/Plots/bs1.png'],
+                    ['Batch size 100 trajectory', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q2/Plots/bs100.png'],
+                    ['Batch size 10000 trajectory', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q2/Plots/bs10000.png'],
+                    ['Cost vs iterations', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q2/Plots/Q2_J_value_vs_iterations_lr=0.001_bs=10000_epoch=1000.png']
+                ],
+                result: 'Observed zig-zag convergence with smaller batches because each batch gradient is only an approximation to the full gradient.'
+            },
+            {
+                tag: 'a1',
+                assignment: 'Assignment 1',
+                number: 'Q3',
+                title: 'Logistic Regression',
+                asked: 'Use Newton-Raphson / Newton method to maximize log likelihood, compute parameters, and plot the decision boundary.',
+                explain: ['Logistic regression models the probability of a binary class using the sigmoid function.', 'Instead of minimizing squared error, it maximizes log likelihood: parameters are good when they assign high probability to the observed labels.', 'Newton method uses both the gradient and Hessian, so each update uses curvature information in addition to slope.', 'The decision boundary is where the predicted probability crosses 0.5, separating the two classes.'],
+                did: ['Implemented sigmoid, log-likelihood, gradient, Hessian, and Newton updates from first principles.', 'Normalized input features, fit theta, and wrote binary predictions for checker output.', 'Generated the training-data decision boundary plot.'],
+                functions: ['sigmoid(x, theta)', 'log_likelihood(x, y, theta)', 'gradient(x, y, theta)', 'hessian(x, theta)', 'newtons_method(x, y, convergence, maxIter)'],
+                files: [
+                    ['q3.py', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q3/q3.py'],
+                    ['Q3.ipynb', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q3/Q3.ipynb']
+                ],
+                images: [['Logistic regression separation', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q3/Plot/lrs.png']],
+                result: 'Reported theta0 = 0.2130308, theta1 = 2.65801936, theta2 = -2.66106075.'
+            },
+            {
+                tag: 'a1',
+                assignment: 'Assignment 1',
+                number: 'Q4',
+                title: 'Gaussian Discriminant Analysis',
+                asked: 'Fit LDA and general GDA for Alaska/Canada salmon data, plot data and linear/quadratic decision boundaries, and compare them.',
+                explain: ['GDA is a generative classifier: it models how each class could have generated the feature values.', 'LDA assumes both classes share one covariance matrix, which produces a linear boundary.', 'General GDA estimates a separate covariance matrix for each class, allowing the boundary to become quadratic.', 'The comparison shows what extra modeling flexibility buys you and when it may matter.'],
+                did: ['Encoded Alaska/Canada labels and normalized the two feature columns.', 'Computed class means and covariance matrices for shared-covariance LDA and class-specific GDA.', 'Derived and used the quadratic decision rule to write predictions.'],
+                functions: ['encode(s)', 'ldaparameters(df)', 'gdaparameters(df)', 'predict(a, b, c, x)'],
+                files: [
+                    ['q4.py', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q4/q4.py'],
+                    ['q4.ipynb', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q4/q4.ipynb'],
+                    ['parameter_values.txt', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q4/parameter_values.txt']
+                ],
+                images: [
+                    ['Scatter plot', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q4/Plots/ScatterPlot_data.png'],
+                    ['Linear boundary', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q4/Plots/q4b.png'],
+                    ['Quadratic boundary', 'projects/col774/a1/2020CS10328_Atharv_Dabli_Ass1/Q4/Plots/q4c.png']
+                ],
+                result: 'Compared shared-covariance linear boundary with class-specific quadratic boundary.'
+            },
+            {
+                tag: 'a2',
+                assignment: 'Assignment 2',
+                number: 'Q1',
+                title: 'Text Classification with Naive Bayes',
+                asked: 'Implement Naive Bayes for movie-review sentiment, compare baselines, draw confusion matrices, add stemming/stopword removal, engineer n-gram features, and report precision/recall/F1.',
+                explain: ['Naive Bayes treats a document as evidence for each class and compares the posterior score for positive vs negative sentiment.', 'The “naive” assumption is conditional independence: after conditioning on the class, word occurrences are treated as independent.', 'Laplace smoothing prevents unseen words from assigning zero probability to an entire class.', 'Stemming, stopword removal, and n-grams change the feature representation: instead of only raw words, the model can use normalized words and local phrases.'],
+                did: ['Implemented Naive Bayes from first principles using Laplace smoothing and log probabilities.', 'Built random/all-positive baselines and confusion-matrix comparisons.', 'Added Porter stemming, stopword removal, word clouds, bigram features, and trigram features.'],
+                functions: ['processString(txt)', 'processString2(txt)', 'BigramProcess(txt)', 'TrigramProcess(txt)', 'trainDict(function, trainingPath)', 'count(word, class_)', 'predict(doc, process)'],
+                files: [
+                    ['Qa/qa.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qa/qa.py'],
+                    ['Qb/qb.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qb/qb.py'],
+                    ['Qc/qc.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qc/qc.py'],
+                    ['Qd/qd.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qd/qd.py'],
+                    ['Qe/qe.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qe/qe.py'],
+                    ['Q1.ipynb', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Q1.ipynb']
+                ],
+                images: [
+                    ['Positive word cloud', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qa/Q1_Qa_Wordcloud_positiveReviews.png'],
+                    ['Negative word cloud', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qa/Q1_Qa_Wordcloud_negativeReviews.png'],
+                    ['Stemmed positive word cloud', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qd/Q1_Qd_Wordcloud_positiveReviews.png'],
+                    ['Stemmed negative word cloud', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q1/Qd/Q1_Qd_Wordcloud_negativeReviews.png']
+                ],
+                result: 'Report: 83.6% initial test accuracy, 83.85% after stemming/stopwords, 86.15% bigram, 86.37% unigram+bigram+trigram.'
+            },
+            {
+                tag: 'a2',
+                assignment: 'Assignment 2',
+                number: 'Q2',
+                title: 'Binary Image Classification with SVM',
+                asked: 'Train binary SVMs on modified CIFAR-10 using CVXOPT dual optimization for linear and Gaussian kernels, then compare with scikit-learn LIBSVM.',
+                explain: ['An SVM tries to separate two classes with the widest possible margin.', 'The dual formulation expresses training in terms of alpha coefficients; examples with non-zero alpha become support vectors.', 'A linear kernel learns a direct separating hyperplane in pixel space, while a Gaussian kernel compares examples by distance and can model nonlinear boundaries.', 'The support-vector images show which training examples are most influential for defining the margin.'],
+                did: ['Flattened 32x32x3 images into 3072-dimensional vectors.', 'Formulated the SVM dual for CVXOPT, built linear and Gaussian kernels, extracted support vectors, w, and b.', 'Compared support vectors, accuracy, weights, bias, and training time against scikit-learn SVM.'],
+                functions: ['readData(dataPath)', 'linear_kernel(x, y)', 'gaussian_kernel(a, b, gamma=0.001)', 'model_train(X, y, kernel, C=1)', 'predict(X, w, b, sv_y, sv_x, a, kernel)', 'accuracy(pred, actual)', 'common_member(a, b)'],
+                files: [
+                    ['Q2/Qa/qa.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Qa/qa.py'],
+                    ['Q2/Qb/qb.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Qb/qb.py'],
+                    ['Q2/Qc/qc.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Qc/qc.py'],
+                    ['Q2.ipynb', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Q2.ipynb']
+                ],
+                images: [
+                    ['Linear support vector 0', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Qa/image_support_vector_linearkernel_0.png'],
+                    ['Linear support vector 1', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Qa/image_support_vector_linearkernel_1.png'],
+                    ['Gaussian support vector 0', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Qb/image_support_vector_gaussian_kernel_0.png'],
+                    ['Weight image', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q2/Qa/weight_image_with_sigmoid.png']
+                ],
+                result: 'Report: linear CVXOPT 2159 support vectors and 67.45% accuracy; Gaussian CVXOPT 2643 support vectors and 77.75% accuracy; sklearn RBF about 77.8%.'
+            },
+            {
+                tag: 'a2',
+                assignment: 'Assignment 2',
+                number: 'Q3',
+                title: 'Multi-Class Image Classification with One-vs-One SVM',
+                asked: 'Extend binary SVMs to 5-class classification using one-vs-one Gaussian-kernel classifiers, compare with sklearn, draw confusion matrices, inspect misclassified examples, and tune C with 5-fold CV.',
+                explain: ['SVMs are naturally binary, so one-vs-one classification trains one classifier for every pair of classes.', 'At prediction time, each pairwise classifier votes for one class; the final class is chosen by vote count, with score-based tie handling.', 'The confusion matrix shows which classes the system mixes up, which is especially useful for low-resolution CIFAR images.', 'Cross-validation estimates which C value generalizes best without touching the test set during model selection.'],
+                did: ['Trained pairwise class models and used voting plus tie-breaking scores at prediction time.', 'Implemented a model wrapper for pairwise SVM state and confusion-matrix reporting.', 'Ran sklearn comparison and cross-validation over C in {1e-5, 1e-3, 1, 5, 10}.'],
+                functions: ['class model', 'readData(dataPath, class1, class2)', 'model_train(X, y, kernel, C=1)', 'predict(X, w, b, sv_y, sv_x, a, kernel=gaussian_kernel)', 'most_frequent(List, models)', 'accuracy(pred, actual)'],
+                files: [
+                    ['Q3/Qa/qa.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q3/Qa/qa.py'],
+                    ['Q3/Qb/qb.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q3/Qb/qb.py'],
+                    ['Q3/Qc/qc.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q3/Qc/qc.py'],
+                    ['Q3/Qd/qd.py', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q3/Qd/qd.py'],
+                    ['Q3.ipynb', 'projects/col774/a2/2020CS10328_Atharv_Dabli_ass2/Q3/Q3.ipynb']
+                ],
+                images: [],
+                result: 'Report: one-vs-one CVXOPT accuracy 59.04% with 26 min training; sklearn accuracy 59.3% with about 2 min training; best C from CV graph was 10.'
+            },
+            {
+                tag: 'a3',
+                assignment: 'Assignment 3',
+                number: 'Q1 Dataset 1',
+                title: 'Mammography: Decision Trees, Random Forests, XGBoost',
+                asked: 'Predict benign/malignant mammographic mass severity using Age, Shape, Margin, and Density; handle missing values; train decision trees, grid-search trees, cost-complexity pruned trees, random forests, imputation variants, and XGBoost.',
+                explain: ['A decision tree repeatedly splits the data using feature thresholds that improve class purity.', 'A full tree can overfit, so grid search and cost-complexity pruning control depth, leaf size, and split behavior.', 'Random forests reduce variance by training many trees on bootstrapped samples and averaging their decisions.', 'XGBoost builds trees sequentially, where each new tree focuses on errors left by the previous ensemble.'],
+                did: ['Wrote preprocessing for removing missing values and imputing median/mode.', 'Implemented question functions qa-qf for tree construction, grid search, pruning, random forest, imputation comparisons, and XGBoost.', 'Saved per-part result text files and generated tree PDFs.'],
+                functions: ['remove_missing_values(df)', 'impute_median(df)', 'impute_mode(df)', 'split_data(df)', 'qa(...)', 'qb(...)', 'qc(...)', 'qd(...)', 'qe(...)', 'qf(...)', 'main()'],
+                files: [
+                    ['dt_mammography.py', 'projects/col774/a3/2020CS10328_Atharv_Dabli/dt_mammography.py'],
+                    ['1_a.txt', 'projects/col774/a3/2020CS10328_Atharv_Dabli/1_a.txt'],
+                    ['1_b.txt', 'projects/col774/a3/2020CS10328_Atharv_Dabli/1_b.txt'],
+                    ['1_c.txt', 'projects/col774/a3/2020CS10328_Atharv_Dabli/1_c.txt'],
+                    ['1_d.txt', 'projects/col774/a3/2020CS10328_Atharv_Dabli/1_d.txt'],
+                    ['1_e.txt', 'projects/col774/a3/2020CS10328_Atharv_Dabli/1_e.txt'],
+                    ['1_f.txt', 'projects/col774/a3/2020CS10328_Atharv_Dabli/1_f.txt']
+                ],
+                images: [],
+                result: 'Saved outputs include default tree test accuracy 0.735, grid-search test accuracy 0.767, pruned-tree test accuracy 0.787, random-forest test accuracy 0.798, and XGBoost test accuracy 0.809.'
+            },
+            {
+                tag: 'a3',
+                assignment: 'Assignment 3',
+                number: 'Q1 Dataset 2',
+                title: 'Drug Reviews: Text Features with Tree Models',
+                asked: 'Predict drug ratings from text-heavy medical drug reviews using vectorized condition/review text, date features, useful count, and tree/ensemble models.',
+                explain: ['Tree models need numeric inputs, so the text fields first have to be converted into sparse count features.', 'CountVectorizer turns review and condition text into columns representing token frequencies.', 'The date field is split into day, month, and year so temporal information is usable as numeric features.', 'The challenge is scale: sparse text matrices can be very high dimensional, making grid search and ensemble training expensive.'],
+                did: ['Processed review strings, removed punctuation/control characters, and handled missing review as empty string.', 'Built sparse feature matrices using CountVectorizer for condition and review plus split date/useful-count features.', 'Implemented decision tree, grid search, pruning, random forest, XGBoost, and LightGBM question functions.'],
+                functions: ['process_string(X)', 'make_sparse_matrix_date(df)', 'make_sparse_matrix_date_test(df, vectorizer_condition, vectorizer_review)', 'qa(file)', 'qb(file)', 'qc(file)', 'qd(file)', 'qe(file)'],
+                files: [
+                    ['dt_drug_review.py', 'projects/col774/a3/2020CS10328_Atharv_Dabli/dt_drug_review.py'],
+                    ['report.pdf', 'projects/col774/a3/2020CS10328_Atharv_Dabli/report.pdf']
+                ],
+                images: [],
+                result: 'Report notes full code was written, but several later runs were too expensive to fully report; it explicitly avoids reporting false data.'
+            },
+            {
+                tag: 'a3',
+                assignment: 'Assignment 3',
+                number: 'Q2',
+                title: 'Fashion-MNIST Neural Networks',
+                asked: 'Implement a generic neural network from first principles for multi-class Fashion-MNIST, train with mini-batch SGD and MSE, compare adaptive learning rate, ReLU vs sigmoid, hidden-layer depth/width, BCE loss, and sklearn MLPClassifier.',
+                explain: ['A neural network composes layers of linear transformations and nonlinear activations to learn complex decision functions.', 'Forward propagation computes predictions; backpropagation applies the chain rule to compute gradients for every weight matrix.', 'Mini-batch SGD updates weights using batches, balancing noisy but frequent updates with computational efficiency.', 'The experiments compare architecture depth, hidden units, sigmoid vs ReLU, adaptive learning rates, MSE vs BCE loss, and a library implementation.'],
+                did: ['Implemented a reusable Neural_network class with forward propagation, backpropagation, mini-batch SGD, adaptive learning-rate handling, and stopping criteria.', 'Implemented sigmoid/ReLU activations, derivatives, MSE/BCE variants, accuracy and confusion-matrix experiments.', 'Ran experiments for parts b-g using custom code and sklearn MLPClassifier comparison.'],
+                functions: ['sigmoid(x)', 'sigmoid_derivative(x)', 'ReLU(x)', 'ReLU_derivative(x)', 'class Neural_network', 'qb()', 'qc()', 'qd()', 'qe()', 'qf()', 'qg()'],
+                files: [
+                    ['neural.py', 'projects/col774/a3/2020CS10328_Atharv_Dabli/neural.py'],
+                    ['neural.ipynb', 'projects/col774/a3/2020CS10328_Atharv_Dabli/neural.ipynb'],
+                    ['report.pdf', 'projects/col774/a3/2020CS10328_Atharv_Dabli/report.pdf']
+                ],
+                images: [],
+                result: 'Report: best architecture discussed around two hidden layers; MSE implementation reached 87.39%, BCE run 85.36%, and ReLU trained faster than sigmoid for comparable accuracy.'
+            }
+        ];
+
+        const technicalNotes = {
+            'Linear Regression': {
+                definition: 'Linear regression learns a linear function y = theta^T x by minimizing mean squared error. The technical core is deriving the gradient of that error and repeatedly updating theta in the opposite direction.',
+                file: 'A1/Q1/q1.py',
+                snippetKind: 'Submitted excerpt',
+                code: `def batchGradiantDescent(alpha, dataX, dataY, cost, maxIter=100000):
+    converged = False
+    m = len(dataY)
+    theta = np.array([0, 0])
+    iter = 0
+
+    while not converged and iter < maxIter:
+        error = dataY - np.matmul(dataX, theta.T)
+        J_cost = 0.5 * np.dot(error, error) / m
+        theta = theta + (alpha / m) * np.dot(dataX.T, error.T)
+
+        if J_cost < cost:
+            converged = True
+        iter += 1
+
+    return theta`,
+                reading: 'This is not a library call to a regressor. The code explicitly computes residuals, the squared-error objective, and the vectorized gradient update. The plus sign appears because error is written as y - Xtheta, so the update is algebraically the same as moving against the gradient of the loss.'
+            },
+            'Sampling and Stochastic Gradient Descent': {
+                definition: 'Stochastic gradient descent approximates the full gradient using smaller batches. It is the workhorse behind scalable optimization because it trades exact gradients for many cheaper updates.',
+                file: 'A1/Q2/q2.py',
+                snippetKind: 'Submitted excerpt',
+                code: `def getBatch(dataX, dataY, batch_size):
+    batchX = [dataX[i:i+batch_size] for i in range(0, len(dataX), batch_size)]
+    batchY = [dataY[i:i+batch_size] for i in range(0, len(dataY), batch_size)]
+    return batchX, batchY
+
+def stochasticGradiantDescent(alpha, dataX, dataY, cost, batch_size, n, maxEpoch=10):
+    batchX, batchY = getBatch(dataX, dataY, batch_size)
+    theta = np.array([0, 0, 0])
+
+    while not converged and epoch < maxEpoch:
+        for i in range(batches):
+            error = batchY[i] - np.matmul(batchX[i], theta.T)
+            J_cost = (0.5 / batch_size) * np.dot(error, error)
+            theta = theta + (alpha / batch_size) * np.dot(batchX[i].T, error.T)`,
+                reading: 'The important detail is that the cost and gradient are computed on batchX[i], not all dataX. This is why the plots can zig-zag: each batch is a noisy estimate of the full-data direction, especially for small batch sizes.'
+            },
+            'Logistic Regression': {
+                definition: 'Logistic regression is a discriminative probabilistic classifier. It maps a linear score through a sigmoid to produce P(y=1 | x), then learns parameters by maximizing log likelihood.',
+                file: 'A1/Q3/q3.py',
+                snippetKind: 'Condensed from submitted functions',
+                code: `def sigmoid(x, theta):
+    z = np.dot(x, theta)
+    return 1 / (1 + np.exp(-z))
+
+def gradient(x, y, theta):
+    hypothesis = sigmoid(x, theta)
+    return np.array(np.dot(x.T, (y - hypothesis)))
+
+def hessian(x, theta):
+    h = sigmoid(x, theta)
+    return x.T @ np.diag(h * (1 - h)) @ x
+
+theta = theta + np.matmul(np.linalg.inv(hess), grad_log_likelihood.T)`,
+                reading: 'The implementation exposes the mathematics: sigmoid probabilities, first derivative, second derivative, and a Newton update. Using the Hessian means the method accounts for curvature, so it can converge in fewer iterations than plain gradient ascent on this small problem.'
+            },
+            'Gaussian Discriminant Analysis': {
+                definition: 'Gaussian Discriminant Analysis is a generative classifier: it estimates p(x | y) for each class as a Gaussian distribution, then uses Bayes rule to choose the most likely class.',
+                file: 'A1/Q4/q4.py',
+                snippetKind: 'Core logic reconstruction',
+                code: `def estimate_gaussian_class_parameters(df):
+    class_0 = df[df['Y'] == 0][['X1', 'X2']]
+    class_1 = df[df['Y'] == 1][['X1', 'X2']]
+
+    mu0 = class_0.mean().to_numpy()
+    mu1 = class_1.mean().to_numpy()
+    sigma0 = covariance_matrix(class_0 - mu0)
+    sigma1 = covariance_matrix(class_1 - mu1)
+    return mu0, mu1, sigma0, sigma1
+
+mu0, mu1, sigma0, sigma1 = estimate_gaussian_class_parameters(df)
+inverse_sigma0 = np.linalg.inv(sigma0)
+inverse_sigma1 = np.linalg.inv(sigma1)
+
+# Quadratic GDA boundary: x.T @ A @ x + B @ x + C = 0
+A = inverse_sigma1 - inverse_sigma0
+B = 2 * (mu0 @ inverse_sigma0 - mu1 @ inverse_sigma1)
+C = (
+    mu1 @ inverse_sigma1 @ mu1.T
+    - mu0 @ inverse_sigma0 @ mu0.T
+    - 2 * np.log(phi / (1 - phi))
+    - np.log(np.linalg.det(sigma0) / np.linalg.det(sigma1))
+)`,
+                reading: 'The submitted file computes these pieces across gdaparameters, matrix inversions, and the prediction equation. This reconstruction pulls the core idea into one place: estimate Gaussian parameters for each class, invert the covariance matrices, and form the quadratic boundary.'
+            },
+            'Text Classification with Naive Bayes': {
+                definition: 'Naive Bayes scores a document by multiplying, or in practice summing logs of, class-conditional word probabilities. It is simple but strong for text because word counts carry a lot of sentiment signal.',
+                file: 'A2/Q1/Qa/qa.py',
+                snippetKind: 'Condensed from submitted functions',
+                code: `def predict(doc, process) -> int:
+    file = open(doc, 'r', encoding='utf-8')
+    words = process(file.read())
+    pos = math.log(totalPos / total)
+    neg = math.log(totalNeg / total)
+
+    for word in words:
+        pos += math.log((count(word, posDict) + 1) / (totalPosWords + vocab))
+        neg += math.log((count(word, negDict) + 1) / (totalNegWords + vocab))
+
+    if pos > neg:
+        return 1
+    return 0`,
+                reading: 'The use of log probabilities avoids numerical underflow from multiplying thousands of small probabilities. The +1 terms are Laplace smoothing, which prevents a single unseen word from zeroing out an entire class score.'
+            },
+            'Binary Image Classification with SVM': {
+                definition: 'A support vector machine maximizes the margin between two classes. In the dual form, the learned classifier is represented by support vectors and alpha coefficients.',
+                file: 'A2/Q2/Qa/qa.py',
+                snippetKind: 'Core logic reconstruction',
+                code: `def gaussian_kernel(a, b, gamma=0.001):
+    return np.exp(-gamma * np.linalg.norm(a - b) ** 2)
+
+def model_train(X, y, kernel, C=1):
+    # Dual objective depends only on labels and pairwise similarities.
+    P = cvxopt.matrix(np.outer(y, y) * kernel(X, X))
+    q = cvxopt.matrix(-np.ones((no_dataPoint, 1)))
+
+    # Box constraints: 0 <= alpha_i <= C.
+    G = cvxopt.matrix(np.vstack((-np.eye(no_dataPoint), np.eye(no_dataPoint))))
+    h = cvxopt.matrix(np.vstack((np.zeros((no_dataPoint, 1)), C * np.ones((no_dataPoint, 1)))))
+
+    solution = cvxopt.solvers.qp(P, q, G, h, A, b)`,
+                reading: 'The key rigor here is formulating the quadratic program manually. P encodes pairwise label-weighted kernel similarities, while G and h encode the box constraints 0 <= alpha_i <= C. That is the SVM dual, not a black-box classifier.'
+            },
+            'Multi-Class Image Classification with One-vs-One SVM': {
+                definition: 'One-vs-one classification reduces a k-class problem into k choose 2 binary classifiers. Each classifier votes during prediction, and the class with the strongest support wins.',
+                file: 'A2/Q3/Qa/qa.py',
+                snippetKind: 'Core logic reconstruction',
+                code: `class model():
+    def __init__(self, class1, class2, w, b, sv_y, sv_x, a):
+        self.class1 = class1
+        self.class2 = class2
+        self.w = w
+        self.b = b
+        self.sv_y = sv_y
+        self.sv_x = sv_x
+        self.a = a
+        self.score = 0
+
+models = []
+for class1, class2 in all_class_pairs:
+    X_pair, y_pair = readData(TRAIN, class1, class2)
+    w, b, sv_y, sv_x, alpha = model_train(X_pair, y_pair, gaussian_kernel)
+    models.append(model(class1, class2, w, b, sv_y, sv_x, alpha))
+
+def predict_multiclass(x, models):
+    votes = []
+    for clf in models:
+        winner = predict(x, clf.w, clf.b, clf.sv_y, clf.sv_x, clf.a)
+        votes.append(clf.class1 if winner == 1 else clf.class2)
+    return most_frequent(votes, models)`,
+                reading: 'The submitted implementation spreads this across the model class, readData, model_train, predict, and most_frequent. This reconstruction shows the actual design: train one classifier per class pair, store each classifier state, then aggregate pairwise votes at prediction time.'
+            },
+            'Mammography: Decision Trees, Random Forests, XGBoost': {
+                definition: 'Decision trees recursively split data into purer groups. Random forests average many decorrelated trees, while boosted trees build an additive sequence of trees to reduce residual errors.',
+                file: 'A3/dt_mammography.py',
+                snippetKind: 'Core logic reconstruction',
+                code: `def grid_search_decision_tree(train_df, validation_df, test_df):
+    X_train, y_train = split_data(train_df)
+    X_val, y_val = split_data(validation_df)
+    X_test, y_test = split_data(test_df)
+
+    parameters = {
+        'criterion': ['gini', 'entropy'],
+        'max_depth': [2, 4, 6, 8, 10],
+        'min_samples_split': [2, 4, 6, 8, 10],
+        'min_samples_leaf': [2, 4, 6, 8, 10]
+    }
+    clf = DecisionTreeClassifier()
+    grid = GridSearchCV(clf, parameters, cv=5)
+    grid.fit(X_train, y_train)
+
+    best_tree = grid.best_estimator_
+    return {
+        'params': grid.best_params_,
+        'train_acc': best_tree.score(X_train, y_train),
+        'val_acc': best_tree.score(X_val, y_val),
+        'test_acc': best_tree.score(X_test, y_test),
+        'depth': best_tree.get_depth(),
+        'leaves': best_tree.get_n_leaves()
+    }`,
+                reading: 'The submitted code reports these values across qb and related output files. This reconstruction makes the model-selection loop explicit: search hyperparameters on training folds, choose the best estimator, and compare train/validation/test behavior plus tree size.'
+            },
+            'Drug Reviews: Text Features with Tree Models': {
+                definition: 'For text-heavy tabular data, the modeling problem begins with representation: raw strings must become numeric features before tree or ensemble methods can use them.',
+                file: 'A3/dt_drug_review.py',
+                snippetKind: 'Condensed from submitted functions',
+                code: `def make_sparse_matrix_date(df):
+    vectorizer_condition = CountVectorizer(max_df=0.95, min_df=2, stop_words='english')
+    vectorizer_review = CountVectorizer(max_df=0.95, min_df=2, stop_words='english')
+
+    X = vectorizer_review.fit_transform(df['review'].values.astype('U')).tocsr()
+
+    date = pd.to_datetime(df['date'])
+    day = date.dt.day
+    month = date.dt.month
+    year = date.dt.year
+    date = sp.csr_matrix(pd.concat([day, month, year], axis=1).values)
+
+    condition = vectorizer_condition.fit_transform(df['condition'].values.astype('U')).tocsr()
+    usefulCount = sp.csr_matrix(df['usefulCount'].values)
+
+    X = sp.hstack([X, date, condition, usefulCount.T])
+    y = df['rating']
+    return X, y, vectorizer_condition, vectorizer_review`,
+                reading: 'The central idea is feature construction. Reviews and conditions become sparse bag-of-words matrices, then structured fields such as date and usefulCount are appended. This lets the same tree models operate over text and numeric metadata together.'
+            },
+            'Fashion-MNIST Neural Networks': {
+                definition: 'A neural network learns layered representations. Backpropagation computes how each weight contributed to the loss, then mini-batch SGD updates all layers from output back to input.',
+                file: 'A3/neural.py',
+                snippetKind: 'Core logic reconstruction',
+                code: `class Neural_network():
+    def __init__(self, layers, number_of_features, number_of_classes,
+                 batch_size=100, learning_rate=0.1, cost_func='MSE'):
+        self.weights = []
+        self.biases = []
+        self.batch_size = batch_size
+        self.learning_rate = learning_rate
+
+        self.weights.append(np.random.rand(layers[0], number_of_features) - 0.5)
+        self.biases.append(np.random.rand(layers[0], 1) - 0.5)
+
+        for i in range(1, len(layers)):
+            self.weights.append(np.random.rand(layers[i], layers[i-1]) - 0.5)
+            self.biases.append(np.random.rand(layers[i], 1) - 0.5)
+
+        self.weights.append(np.random.rand(number_of_classes, layers[-1]) - 0.5)
+        self.biases.append(np.random.rand(number_of_classes, 1) - 0.5)
+
+    def forward_propagation(self, X):
+        z, a = [], []
+        z.append(np.dot(self.weights[0], X) + self.biases[0])
+        a.append(self.activation_function(z[0]))
+        ...
+        z.append(np.dot(self.weights[-1], a[-1]) + self.biases[-1])
+        a.append(sigmoid(z[-1]))
+        return z, a
+
+    def train_batch(self, X_batch, y_batch):
+        z, a = self.forward_propagation(X_batch)
+        dW, dB = self.back_propagation(z, a, y_batch, X_batch)
+        for i in range(len(self.weights)):
+            self.weights[i] -= self.learning_rate * dW[i]
+            self.biases[i] -= self.learning_rate * dB[i]`,
+                reading: 'The submitted class contains initialization, forward propagation, backpropagation, stopping logic, MSE/BCE loss, and experiment functions. This reconstruction highlights the core neural-network loop: build weights for an arbitrary architecture, compute activations, backpropagate gradients, and update every layer.'
+            }
+        };
+
+        questions.forEach((item) => Object.assign(item, technicalNotes[item.title] || {}));
+
+        const list = document.getElementById('question-list');
+        const search = document.getElementById('search');
+        const expandAll = document.getElementById('expand-all');
+        let activeFilter = 'all';
+        let allExpanded = new URLSearchParams(window.location.search).get('expand') === '1';
+        expandAll.textContent = allExpanded ? 'Collapse all' : 'Expand all';
+
+        function iconFor(tag) {
+            if (tag === 'a1') return 'line-chart';
+            if (tag === 'a2') return 'binary';
+            return 'git-fork';
+        }
+
+        function accentFor(tag) {
+            if (tag === 'a1') return 'bg-cyan-100 text-cyan-700';
+            if (tag === 'a2') return 'bg-rose-100 text-rose-700';
+            return 'bg-indigo-100 text-indigo-700';
+        }
+
+        function linkList(items) {
+            return items.map(([label, href]) => `<a target="_blank" class="pill hover:border-stone-400 hover:text-stone-900 transition-colors" href="${href}"><i data-lucide="file-code-2" class="w-3.5 h-3.5"></i>${label}</a>`).join('');
+        }
+
+        function imageGrid(items) {
+            if (!items.length) return '<p class="text-sm text-stone-400">No image artifact in this question folder; see linked code/report/output files.</p>';
+            return `<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">${items.map(([label, src]) => `<a target="_blank" href="${src}" class="group"><img class="thumb group-hover:border-stone-400 transition-colors" src="${src}" alt="${label}"><p class="text-xs text-stone-500 mt-2">${label}</p></a>`).join('')}</div>`;
+        }
+
+        function escapeHtml(value) {
+            return value
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;');
+        }
+
+        function highlightedCode(value) {
+            return escapeHtml(value);
+        }
+
+        function technicalBlock(item) {
+            if (!item.code) return '';
+            return `
+                <div class="mt-6">
+                    <h3 class="text-sm tracking-widest uppercase text-stone-400 mb-3">Technical reading</h3>
+                    <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-5">
+                        <div class="space-y-4">
+                            <div class="rounded-md border border-stone-200 bg-white p-4">
+                                <p class="text-xs tracking-widest uppercase text-stone-400 mb-2">What this method is</p>
+                                <p class="text-sm text-stone-600 leading-relaxed">${item.definition}</p>
+                            </div>
+                            <div class="rounded-md border border-stone-200 bg-white p-4">
+                                <p class="text-xs tracking-widest uppercase text-stone-400 mb-2">What the code shows</p>
+                                <p class="text-sm text-stone-600 leading-relaxed">${item.reading}</p>
+                            </div>
+                        </div>
+                        <div class="code-panel">
+                            <div class="code-panel-header">
+                                <span>${item.file}</span>
+                                <span>${item.snippetKind || 'Python'}</span>
+                            </div>
+                            <pre><code>${highlightedCode(item.code)}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function render() {
+            const q = search.value.trim().toLowerCase();
+            list.innerHTML = questions.map((item, index) => {
+                const haystack = JSON.stringify(item).toLowerCase();
+                const show = (activeFilter === 'all' || item.tag === activeFilter) && (!q || haystack.includes(q));
+                return `
+                    <article class="question-card card p-5 md:p-6 ${allExpanded ? 'open' : ''}" data-tag="${item.tag}" ${show ? '' : 'hidden'}>
+                        <button class="w-full text-left" data-toggle="${index}">
+                            <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-5">
+                                <div class="flex gap-4 min-w-0">
+                                    <span class="shrink-0 h-11 w-11 rounded-full ${accentFor(item.tag)} flex items-center justify-center">
+                                        <i data-lucide="${iconFor(item.tag)}" class="w-5 h-5"></i>
+                                    </span>
+                                    <div class="min-w-0">
+                                        <p class="text-xs tracking-widest uppercase text-stone-400 mb-2">${item.assignment} · ${item.number}</p>
+                                        <h2 class="text-2xl font-medium text-stone-900">${item.title}</h2>
+                                        <p class="mt-3 text-stone-600 font-light leading-relaxed">${item.asked}</p>
+                                        <p class="mt-3 text-sm text-stone-500 leading-relaxed"><span class="font-medium text-stone-700">Method:</span> ${item.explain[0]}</p>
+                                        <div class="mt-4 flex flex-wrap gap-2">
+                                            ${item.functions.slice(0, 4).map((x) => `<span class="code-chip">${x}</span>`).join('')}
+                                            ${item.functions.length > 4 ? `<span class="pill">+${item.functions.length - 4} more</span>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="pill shrink-0"><i data-lucide="chevron-down" class="w-4 h-4"></i> Details</span>
+                            </div>
+                        </button>
+                        <div class="detail-body mt-6 border-t border-stone-200 pt-6">
+                            <div class="mb-6">
+                                <h3 class="text-sm tracking-widest uppercase text-stone-400 mb-3">How the method works</h3>
+                                <div class="grid md:grid-cols-2 gap-3">
+                                    ${item.explain.map((x, step) => `
+                                        <div class="rounded-md border border-stone-200 bg-stone-50 p-4">
+                                            <p class="text-xs tracking-widest uppercase text-stone-400 mb-2">Step ${step + 1}</p>
+                                            <p class="text-sm text-stone-600 leading-relaxed">${x}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ${technicalBlock(item)}
+                            <div class="grid lg:grid-cols-[1fr_0.9fr] gap-6 mt-6">
+                                <div>
+                                    <h3 class="text-sm tracking-widest uppercase text-stone-400 mb-3">What I implemented</h3>
+                                    <ul class="space-y-2 text-sm text-stone-600 leading-relaxed">${item.did.map((x) => `<li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5 text-stone-500 shrink-0"></i><span>${x}</span></li>`).join('')}</ul>
+                                    <h3 class="text-sm tracking-widest uppercase text-stone-400 mt-6 mb-3">Functions / classes used</h3>
+                                    <div class="flex flex-wrap gap-2">${item.functions.map((x) => `<span class="code-chip">${x}</span>`).join('')}</div>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm tracking-widest uppercase text-stone-400 mb-3">Files</h3>
+                                    <div class="flex flex-wrap gap-2 mb-6">${linkList(item.files)}</div>
+                                    <h3 class="text-sm tracking-widest uppercase text-stone-400 mb-3">Result / observation</h3>
+                                    <p class="text-sm text-stone-600 leading-relaxed bg-stone-100 rounded-md p-4">${item.result}</p>
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <h3 class="text-sm tracking-widest uppercase text-stone-400 mb-3">Artifacts</h3>
+                                ${imageGrid(item.images)}
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+            document.querySelectorAll('[data-toggle]').forEach((button) => {
+                button.addEventListener('click', () => button.closest('.question-card').classList.toggle('open'));
+            });
+            lucide.createIcons();
+        }
+
+        document.querySelectorAll('.tab-btn').forEach((button) => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+                button.classList.add('active');
+                activeFilter = button.dataset.filter;
+                render();
+            });
+        });
+        search.addEventListener('input', render);
+        expandAll.addEventListener('click', () => {
+            allExpanded = !allExpanded;
+            expandAll.textContent = allExpanded ? 'Collapse all' : 'Expand all';
+            render();
+        });
+        render();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
